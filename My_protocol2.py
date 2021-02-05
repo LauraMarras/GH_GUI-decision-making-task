@@ -72,8 +72,8 @@ class DecisionMakingGui:
     accuracy = {}
     count = 0
     stim_path = ''
-    coin_sound = (r'C:\Users\laura\OneDrive\Documenti\Internship\Python\Sound Stimuli\coins.mp3')
-    buzz_sound = (r'C:\Users\laura\OneDrive\Documenti\Internship\Python\Sound Stimuli\buzz.mp3')
+    coin_sound = (r'Sound Stimuli/coins.mp3')
+    buzz_sound = (r'Sound Stimuli/buzz.mp3')
 
 
 
@@ -139,7 +139,7 @@ class DecisionMakingGui:
         self.root.unbind('l')
         self.count += 1 # to signal trial number for later
         self.stimulus = self.set.pop(0)
-        self.my_string = r'C:\Users\laura\OneDrive\Documenti\Internship\Python\NOUN stimuli\{stim}{ext}'
+        self.my_string = r'NOUN stimuli\{stim}{ext}'
         self.stim_path = self.my_string.format(stim=str(self.stimulus), ext='.jpg') #files are stored in folder with names from 1 to 60
         self.label.pack(expand=1)
         image = Image.open(self.stim_path)
