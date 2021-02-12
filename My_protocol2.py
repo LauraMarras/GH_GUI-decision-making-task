@@ -193,6 +193,7 @@ class DecisionMakingGui:
     #If W is pressed --> it is evaluated whether the decision was correct or not and stored in 'accuracy'
     def wpress(self, event):
         self.root.unbind('w')
+        self.root.unbind('l')
         self.key_pressed_during_cue = True
         self.root.update_idletasks()
         self.outlet.push_sample(['wpress'])
@@ -220,6 +221,7 @@ class DecisionMakingGui:
     # If L is pressed --> it is evaluated whether the decision was correct or not and stored in 'accuracy' and settings for feedback are defined
     def lpress(self, event):
         self.root.unbind('l')
+        self.root.unbind('w')
         self.key_pressed_during_cue = True
         self.root.update_idletasks()
         self.outlet.push_sample(['lpress'])
