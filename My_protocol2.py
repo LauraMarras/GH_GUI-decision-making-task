@@ -143,7 +143,7 @@ class DecisionMakingGui:
         else:
             self.numTrials = self.numTrials-1
             self.lblVar.set('+')
-            self.label.configure(bg='black', fg='white')
+            self.label.configure(font=('Helvetica bold', 30), bg='black', fg='white')
             self.root.configure(bg='black')
 
             self.root.after(int(self.durationCross * 1000), self.outlet.push_sample(['endCross']))
