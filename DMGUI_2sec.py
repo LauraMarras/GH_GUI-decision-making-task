@@ -145,12 +145,11 @@ class DecisionMakingGui:
         else:
             self.numTrials = self.numTrials-1
             trialn = 120-self.numTrials
-            self.outlet.push_sample([f'start trial n.{trialn}'])
+            self.outlet.push_sample([f'start Trial n.{trialn}'])
             self.lblVar.set('+')
             self.label.configure(font=('Helvetica bold', 30), bg='black', fg='white')
             self.root.configure(bg='black')
 
-            #self.root.after(int(self.durationCross * 1000), self.outlet.push_sample(['endCross']))
             self.root.after(int(self.durationCross * 1000), self.stim)
             self.root.update_idletasks()
 
@@ -159,6 +158,7 @@ class DecisionMakingGui:
         # set which stimulus to present: each image has one number from 1 to 60, number is taken from randomized set
         self.root.unbind('w')
         self.root.unbind('l')
+        self.outlet.push_sample(['end Cross']))
         self.count += 1 # to signal trial number for later
         self.stimulus = self.set.pop(0)
         self.presented_stim[self.stimulus] += 1
@@ -173,18 +173,21 @@ class DecisionMakingGui:
         self.label.image = test
         self.root.update_idletasks()
 
-        self.root.after(int(self.durationStimuli * 1000), self.outlet.push_sample(['start stim_n: ' + str(self.stimulus) + '; rep_n: ' + str(self.presented_stim[self.stimulus])]))]))
+        self.outlet.push_sample(['start Stim n.: ' + str(self.stimulus)])
+        self.outlet.push_sample(['Stim rep n.: ' + str(self.presented_stim[self.stimulus])
+                                 
         self.root.after(int(self.durationStimuli * 1000), self.cue)
 
     #Cue that indicates to make decision
     def cue(self):
+        self.outlet.push_sample(['end Stim'])                                 
         self.key_pressed_during_cue = False
         self.label.pack(expand=1)
-        self.outlet.push_sample(['startCue'])
         self.lblVar.set('PRESS W or L')
         self.label.configure(image='', bg='black', fg='white')
         self.root.configure(bg='black')
         self.root.update_idletasks()
+        self.outlet.push_sample(['start Cue'])
 
 
     #Depending on which key is pressed, different functions are called
@@ -201,7 +204,7 @@ class DecisionMakingGui:
         self.root.unbind('l')
         self.key_pressed_during_cue = True
         self.root.update_idletasks()
-        self.outlet.push_sample(['wpress'])
+        self.outlet.push_sample(['w Press'])
         self.root.after(0, self.cross)
         press = 'w'
         correct = self.categories[self.stimulus]
