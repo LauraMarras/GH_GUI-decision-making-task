@@ -100,6 +100,9 @@ class DecisionMakingGui:
         self.set = create_runs(my_set)
         self.categories = assign_categories(my_set)
         self.fb_color = fb_color_association()
+        self.presented_stim = {}
+        for s in self.set:
+            self.presented_stim[s] = 0
 
         #Layout
         self.width = self.root.winfo_screenwidth() * 3 / 3
@@ -157,6 +160,7 @@ class DecisionMakingGui:
         self.root.unbind('l')
         self.count += 1 # to signal trial number for later
         self.stimulus = self.set.pop(0)
+        self.presented_stim[self.stimulus] += 1
         self.my_string = r'NOUN stimuli/{stim}{ext}'
         self.stim_path = self.my_string.format(stim=str(self.stimulus), ext='.jpg') #files are stored in folder with names from 1 to 60
         self.label.pack(expand=1)
@@ -168,7 +172,7 @@ class DecisionMakingGui:
         self.label.image = test
         self.root.update_idletasks()
 
-        self.root.after(int(self.durationStimuli * 1000), self.outlet.push_sample(['start;' + str(self.stimulus)]))
+        self.root.after(int(self.durationStimuli * 1000), self.outlet.push_sample(['start stim_n: ' + str(self.stimulus) + '; rep_n: ' + str(self.presented_stim[self.stimulus])]))]))
         self.root.after(int(self.durationStimuli * 1000), self.cue)
 
     #Cue that indicates to make decision
