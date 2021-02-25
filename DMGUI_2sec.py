@@ -138,18 +138,19 @@ class DecisionMakingGui:
 
     #Start of new trial
     def trial(self):
-        self.outlet.push_sample(['NewTrialStarted'])
         self.label.pack(expand=1)
         self.root.update_idletasks()
         if self.numTrials == 0 or len(self.set) == 0:
             self.root.after(0, self.end)
         else:
             self.numTrials = self.numTrials-1
+            trialn = 120-self.numTrials
+            self.outlet.push_sample([f'start trial n.{trialn}'])
             self.lblVar.set('+')
             self.label.configure(font=('Helvetica bold', 30), bg='black', fg='white')
             self.root.configure(bg='black')
 
-            self.root.after(int(self.durationCross * 1000), self.outlet.push_sample(['endCross']))
+            #self.root.after(int(self.durationCross * 1000), self.outlet.push_sample(['endCross']))
             self.root.after(int(self.durationCross * 1000), self.stim)
             self.root.update_idletasks()
 
