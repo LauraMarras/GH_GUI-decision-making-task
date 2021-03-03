@@ -175,7 +175,7 @@ class DecisionMakingGui:
         self.label.image = test
         self.root.update_idletasks()
 
-        self.outlet.push_sample(['Start Stim n.: ' + str(self.stimulus) + 'Stim Rep n.: ' + str(self.presented_stim[self.stimulus])])
+        self.outlet.push_sample(['Start Stim n.: ' + str(self.stimulus) + ' - Rep n.: ' + str(self.presented_stim[self.stimulus])])
                                
         self.root.after(int(self.durationStimuli * 1000), self.cue)
 
