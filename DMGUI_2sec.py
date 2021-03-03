@@ -64,6 +64,7 @@ pygame.mixer.init()
 ### GUI
 class DecisionMakingGui:
     numTrials = 120
+    trialn = 0
     durationStimuli = 1
     durationCross = 0.5
     durationCue = 1
@@ -71,6 +72,7 @@ class DecisionMakingGui:
     durationMessage = 1
     accuracy = {}
     count = 0
+    results = {}
     stim_path = ''
     coin_sound = (r'Sound Stimuli/coins.mp3')
     buzz_sound = (r'Sound Stimuli/buzz.mp3')
@@ -101,6 +103,7 @@ class DecisionMakingGui:
         self.categories = assign_categories(my_set)
         self.fb_color = fb_color_association()
         self.presented_stim = {}
+        self.press = ''
         for s in self.set:
             self.presented_stim[s] = 0
 
@@ -147,8 +150,8 @@ class DecisionMakingGui:
             self.root.after(0, self.end)
         else:
             self.numTrials = self.numTrials-1
-            trialn = 120-self.numTrials
-            self.outlet.push_sample([f'Start Trial n.{trialn}'])
+            self.trialn = 120-self.numTrials
+            self.outlet.push_sample([f'Start Trial n.{self.trialn}'])
             self.lblVar.set('+')
             self.label.configure(font=('Helvetica bold', 30), bg='black', fg='white')
             self.root.configure(bg='black')
@@ -176,7 +179,7 @@ class DecisionMakingGui:
         self.root.update_idletasks()
 
         self.outlet.push_sample(['Start Stim n.: ' + str(self.stimulus) + ' - Rep n.: ' + str(self.presented_stim[self.stimulus])])
-                               
+
         self.root.after(int(self.durationStimuli * 1000), self.cue)
 
     #Cue that indicates to make decision
@@ -209,10 +212,10 @@ class DecisionMakingGui:
         self.root.update_idletasks()
         self.outlet.push_sample(['W Press'])
         self.root.after(0, self.cross)
-        press = 'w'
+        self.press = 'w'
         correct = self.categories[self.stimulus]
 
-        if correct == press:
+        if correct == self.press:
             self.letter = 'W'
             self.color = self.fb_color['Correct']
             self.accuracy[self.count] = 'Correct'
@@ -237,10 +240,10 @@ class DecisionMakingGui:
         self.root.update_idletasks()
         self.outlet.push_sample(['L Press'])
         self.root.after(0, self.cross)
-        press = 'l'
+        self.press = 'l'
         correct = self.categories[self.stimulus]
 
-        if correct == press:
+        if correct == self.press:
             self.letter = 'L'
             self.color = self.fb_color['Correct']
             self.accuracy[self.count] = 'Correct'
@@ -267,6 +270,7 @@ class DecisionMakingGui:
             self.root.update_idletasks()
             self.outlet.push_sample(['Time Expired - No Choice'])
             self.root.after(0, self.message)
+            self.press = 'None'
 
     def message(self):                     
         self.outlet.push_sample(['End cue - Start Warning'])
@@ -302,7 +306,7 @@ class DecisionMakingGui:
         self.root.configure(bg= self.color)
         self.root.update_idletasks()
 
-
+        self.root.after(0, self.stream)
         self.root.after(int(self.durationFb * 1000), self.stop_sound)
         self.root.after(int(self.durationFb * 1000), self.trial)
 
@@ -331,7 +335,19 @@ class DecisionMakingGui:
         self.outlet.push_sample(['L Press - wrong time'])
         
     def wpress2(self, event):
-        self.outlet.push_sample(['W Press - wrong time'])                                 
+        self.outlet.push_sample(['W Press - wrong time'])
+
+    def stream(self):
+        trial = self.trialn
+        stimulus = self.stimulus
+        repetition = self.presented_stim[self.stimulus]
+        choice = self.press
+        accuracy = self.accuracy[self.count]
+
+        self.results[trial] = [stimulus, repetition, choice, accuracy]
+        self.outlet.push_sample([str(trial) + ', ' + str(stimulus) + ', ' + str(repetition) + ', ' + choice + accuracy])
+        
+        #print(self.results)
                                  
 root = tk.Tk()
 my_gui = DecisionMakingGui(root, set1)
