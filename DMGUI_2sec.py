@@ -345,7 +345,7 @@ class DecisionMakingGui:
         accuracy = self.accuracy[self.count]
 
         self.results[trial] = [stimulus, repetition, choice, accuracy]
-        self.outlet.push_sample([str(trial) + ', ' + str(stimulus) + ', ' + str(repetition) + ', ' + choice + accuracy])
+        self.outlet.push_sample(['Sum Trail: ' + str(trial) + ', ' + str(stimulus) + ', ' + str(repetition) + ', ' + choice + ', ' + accuracy])
         
         #print(self.results)
                                  
