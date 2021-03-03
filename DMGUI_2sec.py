@@ -130,35 +130,37 @@ class DecisionMakingGui:
         #Press escape to close
         self.root.bind("<Escape>", self.close)
 
-    #Signals start of run
+    #Signals start of session
     def run(self, event):
         self.root.unbind('<space>')
-        self.outlet.push_sample(['RunStarted'])
+        self.outlet.push_sample(['Start Session'])
         self.root.after(0, self.trial)
 
     #Start of new trial
     def trial(self):
         self.label.pack(expand=1)
         self.root.update_idletasks()
+        self.root.bind('w', self.wpress2)
+        self.root.bind('l', self.lpress2)
+
         if self.numTrials == 0 or len(self.set) == 0:
             self.root.after(0, self.end)
         else:
             self.numTrials = self.numTrials-1
             trialn = 120-self.numTrials
-            self.outlet.push_sample([f'start Trial n.{trialn}'])
+            self.outlet.push_sample([f'Start Trial n.{trialn}'])
             self.lblVar.set('+')
             self.label.configure(font=('Helvetica bold', 30), bg='black', fg='white')
             self.root.configure(bg='black')
 
             self.root.after(int(self.durationCross * 1000), self.stim)
             self.root.update_idletasks()
+          
 
     #Stimulus presentation
     def stim(self):
         # set which stimulus to present: each image has one number from 1 to 60, number is taken from randomized set
-        self.root.unbind('w')
-        self.root.unbind('l')
-        self.outlet.push_sample(['end Cross']))
+        self.outlet.push_sample(['End Cross']))
         self.count += 1 # to signal trial number for later
         self.stimulus = self.set.pop(0)
         self.presented_stim[self.stimulus] += 1
@@ -173,13 +175,15 @@ class DecisionMakingGui:
         self.label.image = test
         self.root.update_idletasks()
 
-        self.outlet.push_sample(['start Stim n.: ' + str(self.stimulus)])
-        self.outlet.push_sample(['Stim rep n.: ' + str(self.presented_stim[self.stimulus])
+        self.outlet.push_sample(['Start Stim n.: ' + str(self.stimulus)])
+        self.outlet.push_sample(['Stim Rep n.: ' + str(self.presented_stim[self.stimulus])
                                  
         self.root.after(int(self.durationStimuli * 1000), self.cue)
 
     #Cue that indicates to make decision
     def cue(self):
+        self.root.unbind('w')
+        self.root.unbind('l')
         self.outlet.push_sample(['end Stim'])                                 
         self.key_pressed_during_cue = False
         self.label.pack(expand=1)
@@ -187,7 +191,7 @@ class DecisionMakingGui:
         self.label.configure(image='', bg='black', fg='white')
         self.root.configure(bg='black')
         self.root.update_idletasks()
-        self.outlet.push_sample(['start Cue'])
+        self.outlet.push_sample(['Start Cue'])
 
 
     #Depending on which key is pressed, different functions are called
@@ -204,7 +208,7 @@ class DecisionMakingGui:
         self.root.unbind('l')
         self.key_pressed_during_cue = True
         self.root.update_idletasks()
-        self.outlet.push_sample(['w Press'])
+        self.outlet.push_sample(['W Press'])
         self.root.after(0, self.cross)
         press = 'w'
         correct = self.categories[self.stimulus]
@@ -215,7 +219,7 @@ class DecisionMakingGui:
             self.accuracy[self.count] = 'Correct'
             self.sound = self.coin_sound
 
-            self.outlet.push_sample(['CorrectChoice - W'])
+            self.outlet.push_sample(['Correct W'])
             self.root.update_idletasks()
         else:
             self.letter = 'L'
@@ -223,7 +227,7 @@ class DecisionMakingGui:
             self.accuracy[self.count] = 'Incorrect'
             self.sound = self.buzz_sound
 
-            self.outlet.push_sample(['IncorrectChoice - W'])
+            self.outlet.push_sample(['Incorrect W'])
             self.root.update_idletasks()
 
     # If L is pressed --> it is evaluated whether the decision was correct or not and stored in 'accuracy' and settings for feedback are defined
@@ -232,7 +236,7 @@ class DecisionMakingGui:
         self.root.unbind('w')
         self.key_pressed_during_cue = True
         self.root.update_idletasks()
-        self.outlet.push_sample(['lpress'])
+        self.outlet.push_sample(['L Press'])
         self.root.after(0, self.cross)
         press = 'l'
         correct = self.categories[self.stimulus]
@@ -243,7 +247,7 @@ class DecisionMakingGui:
             self.accuracy[self.count] = 'Correct'
             self.sound = self.coin_sound
 
-            self.outlet.push_sample(['CorrectChoice - L'])
+            self.outlet.push_sample(['Correct L'])
             self.root.update_idletasks()
         else:
             self.letter = 'W'
@@ -251,7 +255,7 @@ class DecisionMakingGui:
             self.accuracy[self.count] = 'Incorrect'
             self.sound = self.buzz_sound
 
-            self.outlet.push_sample(['IncorrectChoice - L'])
+            self.outlet.push_sample(['Incorrect L'])
             self.root.update_idletasks()
 
     # Checks if button has been pressed, if not sends message
@@ -259,39 +263,41 @@ class DecisionMakingGui:
         if not self.key_pressed_during_cue:
             self.root.unbind('w')
             self.root.unbind('l')
+            self.root.bind('w', self.wpress2)
+            self.root.bind('l', self.lpress2)
             self.root.update_idletasks()
-            self.outlet.push_sample(['Time expired - no choice'])
+            self.outlet.push_sample(['Time Expired - No Choice'])
             self.root.after(0, self.message)
 
-    def message(self):
-        self.outlet.push_sample(['End cue-start warning'])
+    def message(self):                     
+        self.outlet.push_sample(['End cue - Start Warning'])
         self.label.pack(expand=1)
         self.lblVar.set('Time expired, please respond quicker')
         self.label.configure(bg='black', fg='red')
         self.root.configure(bg='black')
         self.root.update_idletasks()
         self.accuracy[self.count] = 'No answer'
-
-
         self.root.after(int(self.durationMessage * 1000), self.trial)
-        self.root.after(int(self.durationMessage * 1000), self.outlet.push_sample(['End warning']))
+        
 
 
     #Delay period with fixation cross of 500 ms
     def cross(self):
-        self.outlet.push_sample(['StartCross'])
+        self.outlet.push_sample(['Start Cross'])
         self.label.pack(expand=1)
         self.lblVar.set('+')
         self.label.configure(bg='black', fg='white')
         self.root.configure(bg='black')
         self.root.update_idletasks()
-        self.root.after(int(self.durationCross * 1000), self.outlet.push_sample(['endCross']))
         self.root.after(int(self.durationCross * 1000), self.fb)
 
     #Feedback presentation depending on accuracy on trial
     def fb(self):
+        self.root.bind('w', self.wpress2)
+        self.root.bind('l', self.lpress2)
+        self.outlet.push_sample(['End Cross']))
         self.label.pack(expand=1)
-        self.outlet.push_sample(['startFb'])
+        self.outlet.push_sample(['start Fb'])
         self.lblVar.set(self.letter)
         self.label.configure(bg = self.color, fg = 'black', command=self.play_sound(self.sound))
         self.root.configure(bg= self.color)
@@ -299,7 +305,6 @@ class DecisionMakingGui:
 
 
         self.root.after(int(self.durationFb * 1000), self.stop_sound)
-        self.root.after(int(self.durationFb * 1000), self.outlet.push_sample(['endFb']))
         self.root.after(int(self.durationFb * 1000), self.trial)
 
     # plays sound during FB
@@ -313,17 +318,22 @@ class DecisionMakingGui:
 
 
     def end(self):
-        self.outlet.push_sample(['experimentEnded'])
+        self.outlet.push_sample(['End Experiment'])
         self.lblVar.set('End of experiment')
         self.label.configure(bg='black', fg='white')
         self.root.configure(bg='black')
         self.root.update_idletasks()
 
     def close(self, event):
+        self.outlet.push_sample(['Experiment Ended - ESC pressed'])                                 
         self.root.destroy()
 
+    def lpress2(self, event):
+        self.outlet.push_sample(['L Press - wrong time'])
+        
+    def wpress2(self, event):
+        self.outlet.push_sample(['W Press - wrong time'])                                 
+                                 
 root = tk.Tk()
 my_gui = DecisionMakingGui(root, set1)
 root.mainloop()
-
-# DecisionMakingGui.accuracy stores accuracy for each trial
