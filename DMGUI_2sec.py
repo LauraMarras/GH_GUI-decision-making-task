@@ -160,7 +160,7 @@ class DecisionMakingGui:
     #Stimulus presentation
     def stim(self):
         # set which stimulus to present: each image has one number from 1 to 60, number is taken from randomized set
-        self.outlet.push_sample(['End Cross']))
+        self.outlet.push_sample(['End Cross'])
         self.count += 1 # to signal trial number for later
         self.stimulus = self.set.pop(0)
         self.presented_stim[self.stimulus] += 1
