@@ -176,7 +176,8 @@ class DecisionMakingGui:
         self.root.update_idletasks()
 
         self.outlet.push_sample(['Start Stim n.: ' + str(self.stimulus)])
-        self.outlet.push_sample(['Stim Rep n.: ' + str(self.presented_stim[self.stimulus])
+        self.outlet.push_sample(['Stim Rep n.: ' + str(self.presented_stim[self.stimulus])])
+
                                  
         self.root.after(int(self.durationStimuli * 1000), self.cue)
 
@@ -295,7 +296,7 @@ class DecisionMakingGui:
     def fb(self):
         self.root.bind('w', self.wpress2)
         self.root.bind('l', self.lpress2)
-        self.outlet.push_sample(['End Cross']))
+        self.outlet.push_sample(['End Cross'])
         self.label.pack(expand=1)
         self.outlet.push_sample(['start Fb'])
         self.lblVar.set(self.letter)
