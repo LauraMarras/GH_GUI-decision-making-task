@@ -281,6 +281,7 @@ class DecisionMakingGui:
         self.root.update_idletasks()
         self.accuracy[self.count] = 'No answer'
         self.root.after(int(self.durationMessage * 1000), self.trial)
+        self.root.after(0, self.stream)
         
 
 
