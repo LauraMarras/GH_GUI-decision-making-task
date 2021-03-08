@@ -6,7 +6,7 @@ initial_time = None
 trial_n = 0
 Stim_n = 0
 
-struct = {}
+allTrials = {}
 
 for stream in data:
     markers = stream['time_series']
@@ -26,56 +26,42 @@ for stream in data:
                 string2 = value.replace(',', '')
                 string3 = string2.replace('Sum Trail: ', '')
                 my_list = string3.split(' ')
-                struct[my_list[0]] = my_list[1:]
+                allTrials[my_list[0]] = my_list[1:]
 
     else:
         raise RuntimeError('Unknown stream format')
     
 print(streams)
-print(struct)
+print(allTrials)
 
 # Analyze data per stimulus repetition
-rep1 = []
-rep2 = []
-rep3 = []
-rep4 = []
+repitions={}
 
-for trial in struct.values():
-    if trial[1] == '1':
-        rep1.append(trial[3])
-    elif trial[1] == '2':
-        rep2.append(trial[3])
-    elif trial[1] == '3':
-        rep3.append(trial[3])
-    elif trial[1] == '4':
-        rep4.append(trial[3])
+for trial in allTrials.values():
+    if trial[1] in repitions:
+        repitions[trial[1]]+=[trial[3]]
+    else:
+        repitions[trial[1]]=[trial[3]]
 
+results={}
+total_c=0
+total_i=0
+total_n=0
+for key in repitions:
+    correct = repitions[key].count('Correct')
+    incorrect = repitions[key].count('Incorrect')
+    no = repitions[key].count('No')
+    results[key]=[correct,incorrect,no]
+    total_c+=correct
+    total_i+=incorrect
+    total_n+=no
 
-rep1_c = rep1.count('Correct')
-rep1_i = rep1.count('Incorrect')
-rep1_n = rep1.count('No')
-rep2_c = rep2.count('Correct')
-rep2_i = rep2.count('Incorrect')
-rep2_n = rep2.count('No')
-rep3_c = rep3.count('Correct')
-rep3_i = rep3.count('Incorrect')
-rep3_n = rep3.count('No')
-rep4_c = rep4.count('Correct')
-rep4_i = rep4.count('Incorrect')
-rep4_n = rep4.count('No')
-
-total_c = rep1_c + rep2_c + rep3_c + rep4_c
-total_i = rep1_i + rep2_i + rep3_i + rep4_i
-total_n = rep1_n + rep2_n + rep3_n + rep4_n
 
 accuracy_total = [total_c, total_i, total_n]
-
-
-accuracy_per_repetition = {}
-accuracy_per_repetition[1] = [rep1_c, rep1_i, rep1_n]
-accuracy_per_repetition[2] = [rep2_c, rep2_i, rep2_n]
-accuracy_per_repetition[3] = [rep3_c, rep3_i, rep3_n]
-accuracy_per_repetition[4] = [rep4_c, rep4_i, rep4_n]
-
-print(accuracy_per_repetition)
+print(results)
 print(accuracy_total)
+
+
+
+
+
