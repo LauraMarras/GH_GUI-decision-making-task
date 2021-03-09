@@ -67,7 +67,7 @@ class DecisionMakingGui:
     trialn = 0
     durationStimuli = 1
     durationCross = 0.5
-    durationCue = 1
+    durationCue = 2
     durationFb = 1
     durationMessage = 1
     accuracy = {}
@@ -249,7 +249,7 @@ class DecisionMakingGui:
         self.root.bind('l', self.lpress)
 
     #If no key is pressed, after 1 second the window expires and a message to be quicker is shown
-        self.root.after(int(self.durationCue * 2000), self.check_choice)
+        self.root.after(int(self.durationCue * 1000), self.check_choice)
 
 
     #If W is pressed --> it is evaluated whether the decision was correct or not and stored in 'accuracy'
