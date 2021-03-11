@@ -76,54 +76,68 @@ class DecisionMakingGui:
     stim_path = ''
     coin_sound = (r'Sound Stimuli/coins.mp3')
     buzz_sound = (r'Sound Stimuli/buzz.mp3')
-    dutch_instructions = ''' Taakinstructies:
-    Tijdens deze taak zullen in totaal 30 stimuli worden gepresenteerd. Er zullen 5 runs zijn van elk 6 stimuli,
-        waarbij elke stimulus 4 keer wordt herhaald in willekeurige volgorde.
-    De helft van de stimuli zijn 'winnende' stimuli, de andere helft zijn 'verliezende' stimuli.
-    Het doel is om, telkens als een stimulus wordt gepresenteerd, te kiezen of die tot de winnende of de verliezende 
-        categorie behoort.
-    Elke prikkel wordt willekeurig toegewezen aan een van de categorieën, dus u zult ze in het begin moeten raden,
-        en proefondervindelijk leren, er zit geen verborgen logica achter de associaties.
 
-    1. Aan het begin van elke proef ziet u een kruis in het midden van het scherm.
-        centrale fixatie gedurende de hele proef.
-    2. Vervolgens wordt een stimulus gepresenteerd, u moet de stimulus fixeren en geen reactie geven totdat de
-        stimulus verdwijnt.
-    3. Wanneer de stimulus verdwijnt, wordt u gevraagd de W of L toets op het toetsenbord in te drukken, om aan te 
-        geven of de stimulus behoort tot de categorie Winnen of Verliezen. U heeft 1 seconde om de toets in te drukken, 
-        waarna de tijd verstrijkt en de proef verloren is, dus probeer zo snel mogelijk te kiezen.
-    4. Nadat u op de toets hebt gedrukt (als u dat op tijd hebt gedaan), krijgt u feedback die aangeeft of u de
-        juiste keuze hebt gemaakt of niet.
-    5. Direct daarna zal een nieuwe proef beginnen.
-    
-     Druk op <spatiebalk> om te beginnen
-    '''
-    eng_instructions = ''' Task Instructions:
-    During this task, a total of 30 stimuli will be presented. There will be 5 runs of 6 stimuli each,
-        where each stimulus is repeated 4 times in randomized order.
-    Half of the stimuli will be “winning” stimuli, the other half will be “losing” stimuli.
-    Your goal is to choose, each time a stimulus is presented, whether it belongs to the winning or losing category.
-    Note that each stimulus is randomly assigned to one of the categories, so you will have to guess them at first,
-        and learn trial by trial, there is no hidden logic behind the associations.
+    dutch_instructions = '''  Taakinstructies:
+Tijdens deze opdracht krijgt u een reeks afbeeldingen te zien. Het zijn er 30 in totaal, en elk plaatje wordt 4 keer 
+getoond, dus in totaal 120 keer, in willekeurige volgorde.
+We hebben de helft van de afbeeldingen als "winnend" en de andere helft als "verliezend" ingedeeld. Telkens wanneer 
+een plaatje wordt getoond, is het uw doel te raden en aan te geven of het winnende of verliezende is. 
 
-    1. At the beginning of each trial, you will see a cross in the middle of the screen, please try to maintain
-        central fixation throughout the trial.
-    2. Then, a stimulus will be presented, you should fixate the stimulus and withhold any response until the
-        stimulus disappears.
-    3. At stimulus offset, you will be asked to press either the W or L key on the keyboard, indicating whether the
-        stimulus belongs to the Winning or Losing category. You will have 1 second to press the key, after which
-        the time will expire and the trial will be lost, so try to choose as soon as possible.
-    4. After you press the key (if you did it on time), you will get a feedback indicating whether you did the
-        correct choice or not.
-    5. Right after a new trial will begin.
-    
-   Press <spacebar> to start
+Zodra de afbeelding verdwijnt, heeft u maximaal 2 seconden om uw keuze te maken:
+    - Druk op de linker pijl om Winnen te kiezen
+    - Druk op de rechterpijl om Verliezen te kiezen
+
+Als u er langer dan 2 seconden over doet om te antwoorden, is uw antwoord niet geldig en krijgt u een waarschuwing 
+waarin u wordt gevraagd sneller te antwoorden, dus probeer zo snel mogelijk te antwoorden.
+Als u antwoordt voordat het beeld verdwijnt, zal het antwoord niet geldig zijn, dus zorg ervoor dat u wacht tot het 
+beeld verdwijnt om uw antwoord te geven.
+
+Natuurlijk, wanneer een afbeelding voor de eerste keer wordt gepresenteerd weet je niet het juiste antwoord, dus je 
+zult moeten gokken. Maar, na je keuze, krijg je een feedback die bestaat uit:
+    - Een letter, die aangeeft wat de juiste categorie was: W (winnen) of L (verliezen)
+    - Een kleur en een geluid, die aangeven of je keuze juist was of niet (munten die vallen of zoemgeluid, geel of blauw)
+Door op de feedback te letten, kun je dus leren wat de juiste categorie is voor elke afbeelding en wanneer de 
+afbeelding opnieuw wordt gepresenteerd, kun je proberen correct te antwoorden. Het doel is om de juiste categorieën te 
+leren en zo min mogelijk fouten te maken.
+
+Wees voorbereid, direct na de feedback zal een nieuwe afbeelding worden gepresenteerd.
+
+  Als u klaar bent, drukt u op <spatiebalk> om te beginnen
+'''
+    eng_instructions = '''  Task Instructions:
+During this task, you will be shown a series of images. The images are 30 in total, and each one will be presented 
+4 times, so there will be 120 presentations in total, in random order.
+We assigned half of the images to be “winning” and the other half to be “losing”. Every time one image is presented, 
+your goal is to guess and indicate whether it is winning or losing. 
+
+As soon as the image disappears, you will have up to 2 seconds to make your choice:
+    - Press the left arrow to choose Winning
+    - Press the right arrow to choose Losing
+
+If you take longer than 2 secs to respond, the answer will not be valid and you will se a warning asking you to 
+speed up, so try to answer as fast as possible.
+If you respond before the image disappears, the answer will not be valid, so make sure to wait until the image 
+disappears to give your response.
+
+Of course, when an image is presented for the first time you wont know the correct answer, so you will have to guess. 
+But, after your choice, you will receive a feedback consisting of:
+    - A letter, indicating what was the correct category: W (winning) or L (losing)
+    - A colour and a sound, which indicate whether your choice was accurate or not (coins or buzz sound, yellow or blue)
+So, by paying attention to the feedback, you can learn which is the right category for each image and when the image is 
+presented again you can try to answer correctly. 
+The goal is to learn the correct categories and make less errors as possible.
+
+Be ready, right after the feedback a new image will be presented.
+
+
+   When you are ready, press <spacebar> to start
     '''
 
     instructions = dutch_instructions
 
     def __init__(self, root, my_set):
         self.root = root
+        self.root.attributes('-fullscreen', True)
         self.set = create_runs(my_set)
         self.categories = assign_categories(my_set)
         self.fb_color = fb_color_association()
@@ -141,7 +155,8 @@ class DecisionMakingGui:
 
         #Initialize LSL
         # I am not sure about this part
-        info = StreamInfo('DMmarkerStream', 'Markers', 1, 0, 'string')
+        #info = StreamInfo('DMmarkerStream', 'Markers', 1, 0, 'string')
+        info = StreamInfo('DMmarkerStream', 'Markers', 1, 0, 'string', 'emuidw22')
         # next make an outlet
         self.outlet = StreamOutlet(info)
 
@@ -149,7 +164,7 @@ class DecisionMakingGui:
         self.lang_button = tk.Button(text='ENG', fg='red', command=self.change_lang)
 
         #Configuration Label
-        self.label = tk.Label(font=('Helvetica bold', 18), bg='black', fg='white')
+        self.label = tk.Label(anchor='w', justify='left', font=('Helvetica bold', 15), bg='black', fg='white')
         self.lblVar = tk.StringVar()
         self.label.configure(textvariable=self.lblVar)
         self.lang_button.pack(pady=10)
