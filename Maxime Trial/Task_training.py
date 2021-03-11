@@ -140,7 +140,7 @@ Be ready, right after the feedback a new image will be presented.
 
     def __init__(self, root, my_set):
         self.root = root
-        self.root.attributes('-fullscreen', True)
+        #self.root.attributes('-fullscreen', True)
         self.set = create_runs(my_set)
         self.categories = assign_categories(my_set)
         self.fb_color = fb_color_association()
@@ -257,7 +257,7 @@ Be ready, right after the feedback a new image will be presented.
         self.root.configure(bg='black')
 
         self.label_cue = tk.Label(bg='black', fg='white')
-        im = Image.open(r'C:\Users\laura\OneDrive\Documenti\GitHub\GUI-decision-making-task\KEYB.jpg')
+        im = Image.open(r'KEYB.jpg')
         im = im.resize((200, 100), Image.ANTIALIAS)
         im2 = ImageTk.PhotoImage(im)
         self.label_cue.configure(image=im2, bg='black', fg='white')
