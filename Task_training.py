@@ -8,7 +8,7 @@ import pygame
 # Create three random sets of 20 stimuli
 def create_set():
     stimuli_set = range(1, 61)
-    set1 = random.sample(stimuli_set, 30)
+    set1 = random.sample(stimuli_set, 15)
     set2 = [n for n in random.sample(stimuli_set, 60) if n not in set1]
     # set3 = random.sample(stimuli_set, 30)
     return set1, set2
@@ -67,12 +67,12 @@ pygame.mixer.init()
 
 ### GUI
 class DecisionMakingGui:
-    numTrials = 120
+    numTrials = 60
     trialn = 0
     durationStimuli = 2
     durationCross = 0.5
-    durationCue = 4
-    durationFb = 3
+    durationCue = 3
+    durationFb = 2.5
     durationMessage = 2
     accuracy = {}
     count = 0
