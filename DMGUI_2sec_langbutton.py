@@ -198,18 +198,18 @@ Be ready, right after the feedback a new image will be presented.
         self.root.after(0, self.trial)
         self.lang_button.destroy()
 
-    #Start of new trial
+    # Start of new trial
     def trial(self):
         self.label.pack(expand=1)
         self.root.update_idletasks()
-        self.root.bind('w', self.wpress2)
-        self.root.bind('l', self.lpress2)
+        self.root.bind('<Left>', self.wpress2)
+        self.root.bind('<Right>', self.lpress2)
 
         if self.numTrials == 0 or len(self.set) == 0:
             self.root.after(0, self.end)
         else:
-            self.numTrials = self.numTrials-1
-            self.trialn = 120-self.numTrials
+            self.numTrials = self.numTrials - 1
+            self.trialn = 120 - self.numTrials
             self.outlet.push_sample([f'Start Trial n.{self.trialn}'])
             self.lblVar.set('+')
             self.label.configure(font=('Helvetica bold', 30), bg='black', fg='white')
@@ -217,17 +217,16 @@ Be ready, right after the feedback a new image will be presented.
 
             self.root.after(int(self.durationCross * 1000), self.stim)
             self.root.update_idletasks()
-          
 
-    #Stimulus presentation
+    # Stimulus presentation
     def stim(self):
         # set which stimulus to present: each image has one number from 1 to 60, number is taken from randomized set
         self.outlet.push_sample(['End Cross'])
-        self.count += 1 # to signal trial number for later
+        self.count += 1  # to signal trial number for later
         self.stimulus = self.set.pop(0)
         self.presented_stim[self.stimulus] += 1
         self.my_string = r'NOUN stimuli/{stim}{ext}'
-        self.stim_path = self.my_string.format(stim=str(self.stimulus), ext='.jpg') #files are stored in folder with names from 1 to 60
+        self.stim_path = self.my_string.format(stim=str(self.stimulus), ext='.jpg')  # files are stored in folder with names from 1 to 60
         self.label.pack(expand=1)
         image = Image.open(self.stim_path)
         image = image.resize((500, 500), Image.ANTIALIAS)
@@ -241,36 +240,43 @@ Be ready, right after the feedback a new image will be presented.
 
         self.root.after(int(self.durationStimuli * 1000), self.cue)
 
-    #Cue that indicates to make decision
+    # Cue that indicates to make decision
     def cue(self):
         if self.instructions == self.dutch_instructions:
             cue = 'DRUK W of L'
         elif self.instructions == self.eng_instructions:
             cue = 'PRESS W or L'
-        self.root.unbind('w')
-        self.root.unbind('l')
-        self.outlet.push_sample(['end Stim'])                                 
+        self.root.unbind('<Left>')
+        self.root.unbind('<Right>')
+        self.outlet.push_sample(['end Stim'])
         self.key_pressed_during_cue = False
-        self.label.pack(expand=1)
+        self.label.place(relx=0.4, rely=0.40)
         self.lblVar.set(cue)
         self.label.configure(image='', bg='black', fg='white')
         self.root.configure(bg='black')
+
+        self.label_cue = tk.Label(bg='black', fg='white')
+        im = Image.open(r'C:\Users\laura\OneDrive\Documenti\GitHub\GUI-decision-making-task\KEYB.jpg')
+        im = im.resize((200, 100), Image.ANTIALIAS)
+        im2 = ImageTk.PhotoImage(im)
+        self.label_cue.configure(image=im2, bg='black', fg='white')
+        self.label_cue.image = im2
+        self.label_cue.place(relx=0.42, rely=0.510)
+
         self.root.update_idletasks()
         self.outlet.push_sample(['Start Cue'])
 
+        # Depending on which key is pressed, different functions are called
+        self.root.bind('<Left>', self.wpress)
+        self.root.bind('<Right>', self.lpress)
 
-    #Depending on which key is pressed, different functions are called
-        self.root.bind('w', self.wpress)
-        self.root.bind('l', self.lpress)
-
-    #If no key is pressed, after 1 second the window expires and a message to be quicker is shown
+        # If no key is pressed, after 1 second the window expires and a message to be quicker is shown
         self.root.after(int(self.durationCue * 1000), self.check_choice)
 
-
-    #If W is pressed --> it is evaluated whether the decision was correct or not and stored in 'accuracy'
+    # If W is pressed --> it is evaluated whether the decision was correct or not and stored in 'accuracy'
     def wpress(self, event):
-        self.root.unbind('w')
-        self.root.unbind('l')
+        self.root.unbind('<Left>')
+        self.root.unbind('<Right>')
         self.key_pressed_during_cue = True
         self.root.update_idletasks()
         self.outlet.push_sample(['W Press'])
@@ -297,8 +303,8 @@ Be ready, right after the feedback a new image will be presented.
 
     # If L is pressed --> it is evaluated whether the decision was correct or not and stored in 'accuracy' and settings for feedback are defined
     def lpress(self, event):
-        self.root.unbind('l')
-        self.root.unbind('w')
+        self.root.unbind('<Right>')
+        self.root.unbind('<Left>')
         self.key_pressed_during_cue = True
         self.root.update_idletasks()
         self.outlet.push_sample(['L Press'])
@@ -326,16 +332,17 @@ Be ready, right after the feedback a new image will be presented.
     # Checks if button has been pressed, if not sends message
     def check_choice(self):
         if not self.key_pressed_during_cue:
-            self.root.unbind('w')
-            self.root.unbind('l')
-            self.root.bind('w', self.wpress2)
-            self.root.bind('l', self.lpress2)
+            self.root.unbind('<Left>')
+            self.root.unbind('<Right>')
+            self.root.bind('<Left>', self.wpress2)
+            self.root.bind('<Right>', self.lpress2)
             self.root.update_idletasks()
             self.outlet.push_sample(['Time Expired - No Choice'])
             self.root.after(0, self.message)
             self.press = 'None'
 
-    def message(self):                     
+    def message(self):
+        self.label_cue.destroy()
         if self.instructions == self.dutch_instructions:
             message = 'De tijd is om, reageer alstublieft sneller'
         elif self.instructions == self.eng_instructions:
@@ -349,12 +356,11 @@ Be ready, right after the feedback a new image will be presented.
         self.accuracy[self.count] = 'No answer'
         self.root.after(int(self.durationMessage * 1000), self.trial)
         self.root.after(0, self.stream)
-        
 
-
-    #Delay period with fixation cross of 500 ms
+    # Delay period with fixation cross of 500 ms
     def cross(self):
         self.outlet.push_sample(['Start Cross'])
+        self.label_cue.destroy()
         self.label.pack(expand=1)
         self.lblVar.set('+')
         self.label.configure(bg='black', fg='white')
@@ -362,16 +368,16 @@ Be ready, right after the feedback a new image will be presented.
         self.root.update_idletasks()
         self.root.after(int(self.durationCross * 1000), self.fb)
 
-    #Feedback presentation depending on accuracy on trial
+    # Feedback presentation depending on accuracy on trial
     def fb(self):
-        self.root.bind('w', self.wpress2)
-        self.root.bind('l', self.lpress2)
+        self.root.bind('<Left>', self.wpress2)
+        self.root.bind('<Right>', self.lpress2)
         self.outlet.push_sample(['End Cross'])
         self.label.pack(expand=1)
         self.outlet.push_sample(['start Fb'])
         self.lblVar.set(self.letter)
-        self.label.configure(bg = self.color, fg = 'black', command=self.play_sound(self.sound))
-        self.root.configure(bg= self.color)
+        self.label.configure(bg=self.color, fg='black', command=self.play_sound(self.sound))
+        self.root.configure(bg=self.color)
         self.root.update_idletasks()
 
         self.root.after(0, self.stream)
@@ -387,7 +393,6 @@ Be ready, right after the feedback a new image will be presented.
     def stop_sound(self):
         pygame.mixer.music.stop()
 
-
     def end(self):
         self.outlet.push_sample(['End Experiment'])
         self.lblVar.set('End of experiment')
@@ -396,12 +401,12 @@ Be ready, right after the feedback a new image will be presented.
         self.root.update_idletasks()
 
     def close(self, event):
-        self.outlet.push_sample(['Experiment Ended - ESC pressed'])                                 
+        self.outlet.push_sample(['Experiment Ended - ESC pressed'])
         self.root.destroy()
 
     def lpress2(self, event):
         self.outlet.push_sample(['L Press - wrong time'])
-        
+
     def wpress2(self, event):
         self.outlet.push_sample(['W Press - wrong time'])
 
@@ -414,8 +419,9 @@ Be ready, right after the feedback a new image will be presented.
 
         self.results[trial] = [stimulus, repetition, choice, accuracy]
         self.outlet.push_sample(['Sum Trail: ' + str(trial) + ', ' + str(stimulus) + ', ' + str(repetition) + ', ' + choice + ', ' + accuracy])
-        #print(self.results)
-                                 
+        # print(self.results)
+
+
 root = tk.Tk()
 my_gui = DecisionMakingGui(root, set1)
 root.mainloop()
