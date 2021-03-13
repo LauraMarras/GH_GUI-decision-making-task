@@ -83,8 +83,8 @@ class DecisionMakingGui:
     dutch_instructions = '''  Taakinstructies:
 Tijdens deze opdracht krijgt u een reeks afbeeldingen te zien. Het zijn er 30 in totaal, en elk plaatje wordt 4 keer 
 getoond, dus in totaal 120 keer, in willekeurige volgorde.
-We hebben de helft van de afbeeldingen als "winnend" en de andere helft als "verliezend" ingedeeld. Telkens wanneer 
-een plaatje wordt getoond, is het uw doel te raden en aan te geven of het winnende of verliezende is. 
+We hebben de helft van de afbeeldingen als "winnen" en de andere helft als "verliezen" ingedeeld. Telkens wanneer 
+een plaatje wordt getoond, is het uw doel te raden en aan te geven of het van de "winnen" of "verliezen" categorie is. 
 Zodra de afbeelding verdwijnt, heeft u maximaal 2 seconden om uw keuze te maken:
     - Druk op de linker pijl om Winnen te kiezen
     - Druk op de rechterpijl om Verliezen te kiezen
@@ -92,12 +92,12 @@ Als u er langer dan 2 seconden over doet om te antwoorden, is uw antwoord niet g
 waarin u wordt gevraagd sneller te antwoorden, dus probeer zo snel mogelijk te antwoorden.
 Als u antwoordt voordat het beeld verdwijnt, zal het antwoord niet geldig zijn, dus zorg ervoor dat u wacht tot het 
 beeld verdwijnt om uw antwoord te geven.
-Natuurlijk, wanneer een afbeelding voor de eerste keer wordt gepresenteerd weet je niet het juiste antwoord, dus je 
-zult moeten gokken. Maar, na je keuze, krijg je een feedback die bestaat uit:
+Wanneer een afbeelding voor de eerste keer wordt gepresenteerd weet u natuurlijk niet het juiste antwoord, dus u 
+zult moeten gokken. Maar, na uw keuze, krijgt u feedback die bestaat uit:
     - Een letter, die aangeeft wat de juiste categorie was: W (winnen) of L (verliezen)
-    - Een kleur en een geluid, die aangeven of je keuze juist was of niet (munten die vallen of zoemgeluid, geel of blauw)
-Door op de feedback te letten, kun je dus leren wat de juiste categorie is voor elke afbeelding en wanneer de 
-afbeelding opnieuw wordt gepresenteerd, kun je proberen correct te antwoorden. Het doel is om de juiste categorieën te 
+    - Een kleur en een geluid, die aangeven of de keuze juist was of niet (munten die vallen of zoemgeluid, geel of blauw)
+Door op de feedback te letten, kunt u dus leren wat de juiste categorie is voor elke afbeelding en wanneer de 
+afbeelding opnieuw wordt gepresenteerd, kunt u proberen correct te antwoorden. Het doel is om de juiste categorieën te 
 leren en zo min mogelijk fouten te maken.
 Wees voorbereid, direct na de feedback zal een nieuwe afbeelding worden gepresenteerd.
   Als u klaar bent, drukt u op <spatiebalk> om te beginnen
@@ -106,7 +106,7 @@ Wees voorbereid, direct na de feedback zal een nieuwe afbeelding worden gepresen
 During this task, you will be shown a series of images. The images are 30 in total, and each one will be presented 
 4 times, so there will be 120 presentations in total, in random order.
 We assigned half of the images to be “winning” and the other half to be “losing”. Every time one image is presented, 
-your goal is to guess and indicate whether it is winning or losing. 
+your goal is to guess and indicate whether it is of the "winning" or "losing" category. 
 As soon as the image disappears, you will have up to 2 seconds to make your choice:
     - Press the left arrow to choose Winning
     - Press the right arrow to choose Losing
@@ -114,12 +114,12 @@ If you take longer than 2 secs to respond, the answer will not be valid and you 
 speed up, so try to answer as fast as possible.
 If you respond before the image disappears, the answer will not be valid, so make sure to wait until the image 
 disappears to give your response.
-Of course, when an image is presented for the first time you wont know the correct answer, so you will have to guess. 
-But, after your choice, you will receive a feedback consisting of:
+Of course, when an image is presented for the first time, you won't know the correct answer, so you will have to guess. 
+But, after your choice, you will receive feedback consisting of:
     - A letter, indicating what was the correct category: W (winning) or L (losing)
     - A colour and a sound, which indicate whether your choice was accurate or not (coins or buzz sound, yellow or blue)
 So, by paying attention to the feedback, you can learn which is the right category for each image and when the image is 
-presented again you can try to answer correctly. 
+presented again, you can try to answer correctly. 
 The goal is to learn the correct categories and make less errors as possible.
 Be ready, right after the feedback a new image will be presented.
    When you are ready, press <spacebar> to start
