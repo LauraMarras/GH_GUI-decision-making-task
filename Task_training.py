@@ -3,7 +3,7 @@ import tkinter as tk
 from pylsl import StreamInfo, StreamOutlet
 from PIL import ImageTk, Image
 import pygame
-import GUI_train
+#import GUI_train
 
 
 # Create three random sets of 20 stimuli
