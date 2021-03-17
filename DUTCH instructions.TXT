@@ -1,0 +1,26 @@
+1 Taakinstructies:
+1
+1Tijdens deze opdracht krijgt u een reeks afbeeldingen te zien. Het zijn er 30 in totaal, en elk plaatje wordt 4 keer 
+1getoond, dus in totaal 120 keer, in willekeurige volgorde.
+1
+1We hebben de helft van de afbeeldingen als "winnen" en de andere helft als "verliezen" ingedeeld. Telkens wanneer 
+1een plaatje wordt getoond, is het uw doel te raden en aan te geven of het van de "winnen" of "verliezen" categorie is. 
+1Zodra de afbeelding verdwijnt, heeft u maximaal 2 seconden om uw keuze te maken:
+1    - Druk op de linker pijl om Winnen te kiezen
+1    - Druk op de rechterpijl om Verliezen te kiezen
+2Als u antwoordt voordat het beeld verdwijnt, zal het antwoord niet geldig zijn, dus zorg ervoor dat u wacht tot het 
+2beeld verdwijnt om uw antwoord te geven.
+2
+2Als u er langer dan 2 seconden over doet om te antwoorden, is uw antwoord niet geldig en krijgt u een waarschuwing 
+2waarin u wordt gevraagd sneller te antwoorden, dus probeer zo snel mogelijk te antwoorden.
+3Wanneer een afbeelding voor de eerste keer wordt gepresenteerd weet u natuurlijk niet het juiste antwoord, dus u 
+3zult moeten gokken. Maar, na uw keuze, krijgt u feedback die bestaat uit:
+3    - Een letter, die aangeeft wat de juiste categorie was: W (winnen) of L (verliezen)
+3    - Een kleur en een geluid, die aangeven of de keuze juist was of niet (munten die vallen of zoemgeluid, geel of blauw)
+3Door op de feedback te letten, kunt u dus leren wat de juiste categorie is voor elke afbeelding en wanneer de 
+3afbeelding opnieuw wordt gepresenteerd, kunt u proberen correct te antwoorden. 
+3
+3Het doel is om de juiste categorieën te leren en zo min mogelijk fouten te maken.
+3Wees voorbereid, direct na de feedback zal een nieuwe afbeelding worden gepresenteerd.
+3
+3  Als u klaar bent, drukt u op <spatiebalk> om te beginnen
