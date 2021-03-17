@@ -27,8 +27,8 @@ class DMGUI_Istructions:
         self.width = self.root.winfo_screenwidth() * 3 / 3
         self.height = self.root.winfo_screenheight() * 3 / 3
         self.root.geometry('%dx%d+0+0' % (self.width, self.height))
-        self.root.attributes('-fullscreen', True)
-        self.root.title("Decision Making Task")
+        #self.root.attributes('-fullscreen', True)
+        self.root.title("Decision Making Task Instructions")
         self.root.configure(bg='black')
 
         #Press escape to close
@@ -114,10 +114,3 @@ class DMGUI_Istructions:
     # closes windows
     def close(self, event):
         self.root.destroy()
-
-
-
-root = tk.Tk()
-my_gui = DMGUI_Istructions(root)
-root.mainloop()
-
