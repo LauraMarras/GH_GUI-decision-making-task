@@ -3,13 +3,10 @@ import random
 # Create 2 random sets of 20 stimuli
 def create_set():
     stimuli_set = range(1, 61)
-    set1 = random.sample(stimuli_set, 15)
-    
-    set2 = [n for n in random.sample(stimuli_set, 30) if n not in set1]
-    while len(set2) != 30:
-        set2 = [n for n in random.sample(stimuli_set, 30) if n not in set1]
+    set1 = random.sample(stimuli_set, 30)
+    #set2 = [n for n in random.sample(stimuli_set, 60) if n not in set1]
 
-    return set1, set2
+    return set1
 
 # Create runs and randomize stimuli order
 def create_runs(set_n):
