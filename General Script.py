@@ -12,9 +12,12 @@ set_train, set_test = sc.create_set()
 root = tk.Tk()
 
 #instr_gui = ins.DMGUI_Istructions(root)
-#train_gui = tr.DMGUI_Training(root, set_train)
+train_gui = tr.DMGUI_Training(root, set_train)
+root.mainloop()
+
+
 test_gui = test.DMGUI_Test(root, set_test)
 
 #root.mainloop()
-#root.mainloop()
+
 root.mainloop()

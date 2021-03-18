@@ -27,7 +27,7 @@ class DMGUI_Istructions:
         self.width = self.root.winfo_screenwidth() * 3 / 3
         self.height = self.root.winfo_screenheight() * 3 / 3
         self.root.geometry('%dx%d+0+0' % (self.width, self.height))
-        #self.root.attributes('-fullscreen', True)
+        self.root.attributes('-fullscreen', True)
         self.root.title("Decision Making Task Instructions")
         self.root.configure(bg='black')
 
@@ -47,7 +47,7 @@ class DMGUI_Istructions:
         elif self.language == 'DUTCH':
             butt_text = 'ENGLISH'
         self.lang_button = tk.Button(text=butt_text, fg='red', command=self.change_lang)
-        self.lang_button.grid(pady=20)
+        self.lang_button.grid(columnspan=2, row=0, pady=20, sticky='')
 
     
         # Configuration instructions label
@@ -55,17 +55,17 @@ class DMGUI_Istructions:
         self.lblVar = tk.StringVar()
         self.instructions_label.configure(textvariable=self.lblVar)
         self.lblVar.set(self.instructions[self.page])
-        self.instructions_label.grid(padx=150, ipady=20)
+        self.instructions_label.grid(column=0, row=1, padx=50, ipady=20)
         self.root.update_idletasks
 
         # Configuration of instructions image label
         self.image_label = tk.Label(bg='black', fg='white')
         im = Image.open(self.im_path.format(name=self.language+str(self.page)))
-        im = im.resize((900, 300), Image.ANTIALIAS)
+        im = im.resize((450, 650), Image.ANTIALIAS)
         im2 = ImageTk.PhotoImage(im)
         self.image_label.configure(image=im2, bg='black', fg='white')
         self.image_label.image = im2
-        self.image_label.grid()
+        self.image_label.grid(column=1, row=1, sticky='E')
 
     # Changes language of instructions
     def change_lang(self):
@@ -114,3 +114,7 @@ class DMGUI_Istructions:
     # closes windows
     def close(self, event):
         self.root.destroy()
+
+root = tk.Tk()
+instr_gui = DMGUI_Istructions(root)
+root.mainloop()

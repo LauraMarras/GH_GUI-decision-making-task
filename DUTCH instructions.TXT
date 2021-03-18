@@ -5,6 +5,7 @@
 1
 1We hebben de helft van de afbeeldingen als "winnen" en de andere helft als "verliezen" ingedeeld. Telkens wanneer 
 1een plaatje wordt getoond, is het uw doel te raden en aan te geven of het van de "winnen" of "verliezen" categorie is. 
+1
 1Zodra de afbeelding verdwijnt, heeft u maximaal 2 seconden om uw keuze te maken:
 1    - Druk op de linker pijl om Winnen te kiezen
 1    - Druk op de rechterpijl om Verliezen te kiezen
