@@ -1,10 +1,11 @@
-1 Task Instructions:
+1 Game Instructions:
 1
-1During this task, you will be shown a series of images. The images are 30 in total, and each one will be presented 
+1During this game, you will be shown a series of images. The images are 30 in total, and each one will be presented 
 14 times, so there will be 120 presentations in total, in random order.
 1
 1We assigned half of the images to be “winning” and the other half to be “losing”. Every time one image is presented, 
 1your goal is to guess and indicate whether it is of the "winning" or "losing" category. 
+1
 1As soon as the image disappears, you will have up to 2 seconds to make your choice:
 1    - Press the left arrow to choose Winning
 1    - Press the right arrow to choose Losing
@@ -22,4 +23,5 @@
 3
 3The goal is to learn the correct categories and make less errors as possible.
 3Be ready, right after the feedback a new image will be presented.
-4   When you are ready, press <spacebar> to start
+3
+3   When you are ready, press 'L' to start
