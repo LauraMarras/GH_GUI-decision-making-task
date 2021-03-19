@@ -22,5 +22,4 @@
 3
 3Het doel is om de juiste categorieën te leren en zo min mogelijk fouten te maken.
 3Wees voorbereid, direct na de feedback zal een nieuwe afbeelding worden gepresenteerd.
-3
-3  Als u klaar bent, drukt u op <spatiebalk> om te beginnen
+4 Als u klaar bent, drukt u op <spatiebalk> om te beginnen

@@ -5,12 +5,10 @@ import pygame
 import Set_creation as sc
 
 
-### GUI
+###GUI
 class DMGUI_Test:
 
     #Set number of trials and windows durations
-    numTrials = 120
-    trialn = 0
     durationStimuli = 1
     durationCross = 0.5
     durationCue = 2
@@ -27,11 +25,22 @@ class DMGUI_Test:
     eng_instructions = 'When you are ready, press <spacebar> to start'
     instructions = eng_instructions
 
-    def __init__(self, root, my_set):
+    def __init__(self, root, pp_n):
         pygame.mixer.init()
+        self.numTrials = 120
+        self.trialn = 0
+
+        #Retrieve sets for pp
+        try:
+            self.all_sets = sc.read_set(pp_n)
+        except FileNotFoundError:
+            sc.store_set(pp_n)
+            self.all_sets = sc.read_set(pp_n)
+
         self.root = root
-        self.set = sc.create_runs(my_set)
-        self.categories = sc.assign_categories(my_set)
+        self.initial_set = self.all_sets['test']
+        self.set = sc.create_runs(self.initial_set)
+        self.categories = sc.assign_categories(self.initial_set)
         self.fb_color = sc.fb_color_association()
         self.accuracy = {}
         self.count = 0
@@ -42,7 +51,7 @@ class DMGUI_Test:
             self.presented_stim[s] = 0
 
         #Layout
-        #self.root.attributes('-fullscreen', True)
+        self.root.attributes('-fullscreen', True)
         self.width = self.root.winfo_screenwidth() * 3 / 3
         self.height = self.root.winfo_screenheight() * 3 / 3
         self.root.geometry('%dx%d+0+0' % (self.width, self.height))
@@ -320,3 +329,9 @@ class DMGUI_Test:
         self.results[trial] = [stimulus, repetition, choice, accuracy]
         self.outlet.push_sample(['Sum Trail: ' + str(trial) + ', ' + str(stimulus) + ', ' + str(repetition) + ', ' + choice + ', ' + accuracy])
 
+
+
+#Call the GUI
+root = tk.Tk()
+train_gui = DMGUI_Test(root, 1)
+root.mainloop()

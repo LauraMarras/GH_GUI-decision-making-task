@@ -6,28 +6,48 @@ import Set_creation as sc
 
 
 ###GUI
-class DMGUI_Training:
+class DMGUI_Training_fast:
     
     #Set number of trials and windows durations
-    
-    durationStimuli = 2
+    durationStimuli = 1
     durationCross = 0.5
-    durationCue = 3
-    durationFb = 2.5
-    durationMessage = 2
+    durationCue = 2
+    durationFb = 1
+    durationMessage = 1
 
+    #store stimuli path
     stim_path = ''
     coin_sound = (r'Sound Stimuli/coins.mp3')
     buzz_sound = (r'Sound Stimuli/buzz.mp3')
     
     #save instructions text
-    dutch_instructions = 'Als u klaar bent, drukt u op <spatiebalk> om te beginnen'
-    eng_instructions = 'When you are ready, press <spacebar> to start'
+    dutch_instructions = '''Wees voorzichtig, alles zal nu sneller gaan.
+
+Beelden zullen slechts één seconde zichtbaar zijn.
+
+Je hebt maximaal 2 seconden om op 'L' of 'W' te drukken.
+
+Vergeet niet te wachten tot het beeld verdwenen is voordat u antwoord geeft!
+
+
+Als u klaar bent, drukt u op <spatiebalk> om te beginnen'''
+
+    eng_instructions = '''Be careful, everything will be faster now.
+
+Images will be visible for only one second.
+
+You will have a maximum of 2 seconds to press 'L' or 'W'.
+
+Remember to wait for the image to disappear before answering!
+
+
+    When you are ready, press <spacebar> to start'''
+
     instructions = eng_instructions
 
     def __init__(self, root, pp_n):
         pygame.mixer.init()
-        self.numTrials = 60
+        self.numTrials = 20
         self.trialn = 0
         
         #Retrieve sets for pp
@@ -38,7 +58,7 @@ class DMGUI_Training:
             self.all_sets = sc.read_set(pp_n)
 
         self.root = root
-        self.initial_set = self.all_sets['train']
+        self.initial_set = self.all_sets['train_fast']
         self.set = sc.create_runs(self.initial_set)
         self.categories = sc.assign_categories(self.initial_set)
         self.fb_color = sc.fb_color_association()
@@ -118,7 +138,7 @@ class DMGUI_Training:
             self.label.configure(font=('Helvetica bold', 30), bg='black', fg='white')
             self.root.configure(bg='black')
 
-            self.root.after(int(self.durationCross * 3000), self.stim)
+            self.root.after(int(self.durationCross * 1000), self.stim)
             self.root.update_idletasks()
 
     #Stimulus presentation
@@ -333,5 +353,5 @@ class DMGUI_Training:
 
 #Call the GUI
 root = tk.Tk()
-train_gui = DMGUI_Training(root, 1)
+train_gui = DMGUI_Training_fast(root, 1)
 root.mainloop()

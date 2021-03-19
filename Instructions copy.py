@@ -1,44 +1,144 @@
 import tkinter as tk
-from pylsl import StreamInfo, StreamOutlet
 from PIL import ImageTk, Image
 import pygame
 import Set_creation as sc
 
+#Reads instructions from txt file and creates 3 sections
+def read_instructions(language):
+    with open ('{} instructions.txt'.format(language), 'rt', encoding='UTF-8') as instructions_file:
+        instructions_text = instructions_file.read()
+        lines = instructions_text.split('\n')             
+        instructions = {1: '', 2: '', 3: '', 4: ''}
+       
+        for line in lines:
+            instructions[int(line[0])] += line[1:] + '\n'
 
-###GUI
-class DMGUI_Training:
+    return instructions
     
-    #Set number of trials and windows durations
+#Creates GUI
+class DMGUI_Istructions:
+    language = 'ENG'
+    instructions = read_instructions(language)
+    page = 1
+    im_path = 'C:/Users/laura/OneDrive/Documenti/GitHub/GUI-decision-making-task/Instr_images/{name}.jpg'
     
-    durationStimuli = 2
-    durationCross = 0.5
-    durationCue = 3
-    durationFb = 2.5
-    durationMessage = 2
-
-    stim_path = ''
-    coin_sound = (r'Sound Stimuli/coins.mp3')
-    buzz_sound = (r'Sound Stimuli/buzz.mp3')
-    
-    #save instructions text
-    dutch_instructions = 'Als u klaar bent, drukt u op <spatiebalk> om te beginnen'
-    eng_instructions = 'When you are ready, press <spacebar> to start'
-    instructions = eng_instructions
-
-    def __init__(self, root, pp_n):
-        pygame.mixer.init()
-        self.numTrials = 60
-        self.trialn = 0
+    def __init__(self, root):
+        self.root = root
         
-        #Retrieve sets for pp
+        #Layout
+        self.width = self.root.winfo_screenwidth() * 3 / 3
+        self.height = self.root.winfo_screenheight() * 3 / 3
+        self.root.geometry('%dx%d+0+0' % (self.width, self.height))
+        self.root.attributes('-fullscreen', True)
+        self.root.title("Decision Making Task Instructions")
+        self.root.configure(bg='black')
+
+        #Press escape to close
+        self.root.bind("<Escape>", self.close)
+
+        #Press arrow to change page
+        self.root.bind('<Right>', self.next_page)
+        self.root.bind('<Left>', self.prev_page)
+
+        self.root.after(0, self.objects)
+
+    def objects(self):
+        #language button
+        if self.language == 'ENG':
+            butt_text = 'DUTCH'
+        elif self.language == 'DUTCH':
+            butt_text = 'ENGLISH'
+        self.lang_button = tk.Button(text=butt_text, fg='red', command=self.change_lang)
+        self.lang_button.grid(pady=20)
+
+        if self.page == 4:
+            self.root.bind('<space>', self.start)
+    
+        # Configuration instructions label
+        self.instructions_label = tk.Label(anchor='w', justify='left', font=('Helvetica bold', 15), bg='black', fg='white')
+        self.lblVar = tk.StringVar()
+        self.instructions_label.configure(textvariable=self.lblVar)
+        self.lblVar.set(self.instructions[self.page])
+        self.instructions_label.grid(padx=150, ipady=20)
+        self.root.update_idletasks
+
+        # Configuration of instructions image label
+        self.image_label = tk.Label(bg='black', fg='white')
+        im = Image.open(self.im_path.format(name=self.language+str(self.page)))
+        im = im.resize((900, 300), Image.ANTIALIAS)
+        im2 = ImageTk.PhotoImage(im)
+        self.image_label.configure(image=im2, bg='black', fg='white')
+        self.image_label.image = im2
+        self.image_label.grid()
+
+    # Changes language of instructions
+    def change_lang(self):
+        if self.language == 'ENG':
+            self.language = 'DUTCH'
+            self.instructions = read_instructions(self.language)
+            self.lblVar.set(self.instructions[self.page])
+            self.lang_button['text'] = "ENGLISH"
+            im = Image.open(self.im_path.format(name=self.language+str(self.page)))
+            im = im.resize((900, 300), Image.ANTIALIAS)
+            im2 = ImageTk.PhotoImage(im)
+            self.image_label.configure(image=im2, bg='black', fg='white')
+            self.image_label.image = im2
+        elif self.language == 'DUTCH':
+            self.language = 'ENG'
+            self.instructions = read_instructions(self.language)
+            self.lblVar.set(self.instructions[self.page])
+            self.lang_button['text'] = "DUTCH"
+            im = Image.open(self.im_path.format(name=self.language+str(self.page)))
+            im = im.resize((900, 300), Image.ANTIALIAS)
+            im2 = ImageTk.PhotoImage(im)
+            self.image_label.configure(image=im2, bg='black', fg='white')
+            self.image_label.image = im2
+    
+    def next_page(self, event):
+        if self.page < 4:
+            self.page += 1
+            self.root.after(0, self.remove_obj)
+            self.root.after(0, self.objects)
+        else:
+            self.page = 4
+    
+    def prev_page(self, event):
+        if self.page > 1:
+            self.page -= 1
+            self.root.after(0, self.remove_obj)
+            self.root.after(0, self.objects)
+        else:
+            self.page = 1
+    
+    def remove_obj(self):
+        self.lang_button.destroy()
+        self.instructions_label.destroy()
+        self.image_label.destroy()
+    
+    # closes windows
+    def close(self, event):
+        self.root.destroy()
+
+    #start example
+    def start(self, event):
+        
+
+        self.stim_path = ''
+        self.coin_sound = (r'Sound Stimuli/coins.mp3')
+        self.buzz_sound = (r'Sound Stimuli/buzz.mp3')
+       
+        self.root.after(0, self.remove_obj)
+        self.root.unbind('<Left>')
+        self.root.unbind('<Right>')
+
+           #Retrieve sets for pp
         try:
             self.all_sets = sc.read_set(pp_n)
         except FileNotFoundError:
             sc.store_set(pp_n)
             self.all_sets = sc.read_set(pp_n)
 
-        self.root = root
-        self.initial_set = self.all_sets['train']
+        self.initial_set = self.all_sets['ins']
         self.set = sc.create_runs(self.initial_set)
         self.categories = sc.assign_categories(self.initial_set)
         self.fb_color = sc.fb_color_association()
@@ -51,80 +151,25 @@ class DMGUI_Training:
             self.presented_stim[s] = 0
 
         #Layout
-        self.root.attributes('-fullscreen', True)
-        self.width = self.root.winfo_screenwidth() * 3 / 3
-        self.height = self.root.winfo_screenheight() * 3 / 3
-        self.root.geometry('%dx%d+0+0' % (self.width, self.height))
-        self.root.title("Decision Making Task Training")
         self.root.configure(bg='black')
-
-        #Initialize LSL
-        info = StreamInfo('DMmarkerStream', 'Markers', 1, 0, 'string')
-        #next make an outlet
-        self.outlet = StreamOutlet(info)
-
-        #Configuration language button
-        self.lang_button = tk.Button(text='DUTCH', fg='red', command=self.change_lang)
-
-        #Configuration Label
-        self.label = tk.Label(anchor='w', justify='left', font=('Helvetica bold', 15), bg='black', fg='white')
+        self.label = tk.Label(font=('Helvetica bold', 30), bg='black', fg='white')
         self.lblVar = tk.StringVar()
         self.label.configure(textvariable=self.lblVar)
         self.lang_button.pack(pady=10)
-        self.lblVar.set(self.instructions)
-        self.label.pack(expand=1)
-
-        #Press spacebar to start
-        self.root.bind('<space>', self.run)
-
-        #Press escape to close
-        self.root.bind("<Escape>", self.close)
-
-
-    #Changes language of instructions
-    def change_lang(self):
-        if self.instructions == self.dutch_instructions:
-            self.instructions = self.eng_instructions
-            self.lblVar.set(self.instructions)
-            self.label.configure(textvariable=self.lblVar)
-            self.lang_button['text'] = "DUTCH"
-        elif self.instructions == self.eng_instructions:
-            self.instructions = self.dutch_instructions
-            self.lblVar.set(self.instructions)
-            self.label.configure(textvariable=self.lblVar)
-            self.lang_button['text'] = "ENGLISH"
-
-    #Signals start of session
-    def run(self, event):
-        self.root.unbind('<space>')
-        self.outlet.push_sample(['Start Session'])
-        self.root.after(0, self.trial)
-        self.lang_button.destroy()
-
-    #Start of new trial
-    def trial(self):
-        self.label.pack(expand=1)
-        self.root.update_idletasks()
-        self.root.bind('<Left>', self.wpress2)
-        self.root.bind('<Right>', self.lpress2)
+        self.lblVar.set('+')
 
         if self.numTrials == 0 or len(self.set) == 0:
             self.root.after(0, self.end)
         else:
             self.numTrials = self.numTrials - 1
-            self.trialn = 120 - self.numTrials
-            self.outlet.push_sample([f'Start Trial n.{self.trialn}'])
-            self.lblVar.set('+')
-            self.label.configure(font=('Helvetica bold', 30), bg='black', fg='white')
-            self.root.configure(bg='black')
+            self.trialn = 120 - self.numTrials            
+            self.label.pack(expand=1)
 
             self.root.after(int(self.durationCross * 3000), self.stim)
             self.root.update_idletasks()
 
     #Stimulus presentation
     def stim(self):
-        self.outlet.push_sample(['End Cross'])
-
         #set which stimulus to present: each image has one number from 1 to 60, number is taken from randomized set
         self.count += 1  #to signal trial number for later
         self.stimulus = self.set.pop(0)
@@ -139,20 +184,14 @@ class DMGUI_Training:
         self.root.configure(bg='black')
         self.label.image = test
         self.root.update_idletasks()
-
-        self.outlet.push_sample(['Start Stim n.: ' + str(self.stimulus) + ' - Rep n.: ' + str(self.presented_stim[self.stimulus])])
-
         self.root.after(int(self.durationStimuli * 1000), self.cue)
 
     #Cue that indicates to make decision
     def cue(self):
-        if self.instructions == self.dutch_instructions:
+        if self.language == 'DUTCH':
             cue = 'DRUK W of L'
-        elif self.instructions == self.eng_instructions:
+        elif self.language == 'ENG':
             cue = 'PRESS W or L'
-        self.root.unbind('<Left>')
-        self.root.unbind('<Right>')
-        self.outlet.push_sample(['end Stim'])
         self.key_pressed_during_cue = False
         self.label.place(relx=0.4, rely=0.40)
         self.lblVar.set(cue)
@@ -168,8 +207,7 @@ class DMGUI_Training:
         self.label_cue.place(relx=0.42, rely=0.510)
 
         self.root.update_idletasks()
-        self.outlet.push_sample(['Start Cue'])
-
+        
         #Depending on which key is pressed, different functions are called
         self.root.bind('<Left>', self.wpress)
         self.root.bind('<Right>', self.lpress)
@@ -306,32 +344,10 @@ class DMGUI_Training:
         self.root.configure(bg='black')
         self.root.update_idletasks()
 
-    #Closes window
-    def close(self, event):
-        self.outlet.push_sample(['Experiment Ended - ESC pressed'])
-        self.root.destroy()
-
-    #pushes stream when l is pressed at the wrong time
-    def lpress2(self, event):
-        self.outlet.push_sample(['L Press - wrong time'])
-
-    #pushes stream when w is pressed at the wrong time
-    def wpress2(self, event):
-        self.outlet.push_sample(['W Press - wrong time'])
-
-    #sends stream with summary trial info
-    def stream(self):
-        trial = self.trialn
-        stimulus = self.stimulus
-        repetition = self.presented_stim[self.stimulus]
-        choice = self.press
-        accuracy = self.accuracy[self.count]
-
-        self.results[trial] = [stimulus, repetition, choice, accuracy]
-        self.outlet.push_sample(['Sum Trail: ' + str(trial) + ', ' + str(stimulus) + ', ' + str(repetition) + ', ' + choice + ', ' + accuracy])
+        
 
 
-#Call the GUI
+ #Call the GUI
 root = tk.Tk()
-train_gui = DMGUI_Training(root, 1)
+instr_gui = DMGUI_Istructions(root)
 root.mainloop()

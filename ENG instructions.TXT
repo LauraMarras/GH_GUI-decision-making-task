@@ -22,5 +22,4 @@
 3
 3The goal is to learn the correct categories and make less errors as possible.
 3Be ready, right after the feedback a new image will be presented.
-3
-3   When you are ready, press <spacebar> to start
+4   When you are ready, press <spacebar> to start

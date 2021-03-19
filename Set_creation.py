@@ -1,15 +1,18 @@
 import random
+import json
 
 # Create 2 random sets of 20 stimuli
 def create_set():
     stimuli_set = range(1, 61)
-    set1 = random.sample(stimuli_set, 15)
+    set1 = random.sample(stimuli_set, 30)
     
-    set2 = [n for n in random.sample(stimuli_set, 30) if n not in set1]
-    while len(set2) != 30:
-        set2 = [n for n in random.sample(stimuli_set, 30) if n not in set1]
+    set_test = [n for n in random.sample(stimuli_set, 60) if n not in set1]
+    
+    set_ins = set1[0:5] #5 stimuli
+    set_train = set1[5:15] #10 stimuli
+    set_train_fast = set1[15:20] #5 stimuli
 
-    return set1, set2
+    return set_test, set_ins, set_train, set_train_fast
 
 # Create runs and randomize stimuli order
 def create_runs(set_n):
@@ -30,10 +33,14 @@ def create_runs(set_n):
             one_long_run.append(trial)
     return one_long_run
 
-
 # Randomly assign half of the stimuli to the winning category and half to the losing category for each set
 def assign_categories(set_n):
-    win = random.sample(set_n, 10)
+    if len(set_n)%2 == 0:
+        tot_numb = int((len(set_n))/2)
+    else:
+        tot_numb = int(((len(set_n))-1)/2)
+
+    win = random.sample(set_n, tot_numb)
     lose = [n for n in set_n if n not in win]
     categories = {}
     for trial in set_n:
@@ -59,3 +66,26 @@ def fb_color_association():
     fb_color = {'Correct': 'blue', 'Incorrect': 'yellow'}
     return fb_color
 
+
+def create_pp_sets():
+    set_test, set_ins, set_train, set_train_fast = create_set()
+    all_sets = [set_test, set_ins, set_train, set_train_fast]
+    keys = ['test', 'ins', 'train', 'train_fast']
+    all_data = {}
+    for n in range(0,4):
+        all_data[keys[n]] = all_sets[n]
+    return all_data
+
+def store_set(pp_n):    
+    file_name = 'Info_pp{}.txt'.format(str(pp_n))
+    data = create_pp_sets()
+    with open(file_name, 'w+') as file:
+       file.write(json.dumps(data)) 
+
+def read_set(pp_n):
+    file_name = 'Info_pp{}.txt'.format(str(pp_n))
+    with open(file_name, 'r') as file:
+       my_string = file.read()
+       data = json.loads(my_string)
+
+    return data
