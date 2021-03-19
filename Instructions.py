@@ -6,7 +6,7 @@ def read_instructions(language):
     with open ('{} instructions.txt'.format(language), 'rt', encoding='UTF-8') as instructions_file:
         instructions_text = instructions_file.read()
         lines = instructions_text.split('\n')             
-        instructions = {1: '', 2: '', 3: ''}
+        instructions = {1: '', 2: '', 3: '', 4: ''}
        
         for line in lines:
             instructions[int(line[0])] += line[1:] + '\n'
@@ -27,7 +27,7 @@ class DMGUI_Istructions:
         self.width = self.root.winfo_screenwidth() * 3 / 3
         self.height = self.root.winfo_screenheight() * 3 / 3
         self.root.geometry('%dx%d+0+0' % (self.width, self.height))
-        #self.root.attributes('-fullscreen', True)
+        self.root.attributes('-fullscreen', True)
         self.root.title("Decision Making Task Instructions")
         self.root.configure(bg='black')
 
@@ -91,12 +91,12 @@ class DMGUI_Istructions:
             self.image_label.image = im2
     
     def next_page(self, event):
-        if self.page < 3:
+        if self.page < 4:
             self.page += 1
             self.root.after(0, self.remove_obj)
             self.root.after(0, self.objects)
         else:
-            self.page = 3
+            self.page = 4
     
     def prev_page(self, event):
         if self.page > 1:
@@ -114,3 +114,9 @@ class DMGUI_Istructions:
     # closes windows
     def close(self, event):
         self.root.destroy()
+
+
+#Call the GUI
+root = tk.Tk()
+train_gui = DMGUI_Istructions(root)
+root.mainloop()
