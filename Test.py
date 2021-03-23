@@ -17,8 +17,8 @@ class DMGUI_Test:
 
     #store stimuli path
     stim_path = ''
-    coin_sound = (r'Sound Stimuli/coins.mp3')
-    buzz_sound = (r'Sound Stimuli/buzz.mp3')
+    coin_sound = ('./Sound Stimuli/coins.mp3')
+    buzz_sound = ('./Sound Stimuli/buzz.mp3')
     
     #save instructions text
     dutch_instructions = 'Als u klaar bent, drukt u op <spatiebalk> om te beginnen'
@@ -128,7 +128,7 @@ class DMGUI_Test:
         self.count += 1  #to signal trial number for later
         self.stimulus = self.set.pop(0)
         self.presented_stim[self.stimulus] += 1
-        self.my_string = r'NOUN stimuli/{stim}{ext}'
+        self.my_string = './NOUN stimuli/{stim}{ext}'
         self.stim_path = self.my_string.format(stim=str(self.stimulus), ext='.jpg')  # files are stored in folder with names from 1 to 60
         self.label.pack(expand=1)
         image = Image.open(self.stim_path)
@@ -159,7 +159,7 @@ class DMGUI_Test:
         self.root.configure(bg='black')
 
         self.label_cue = tk.Label(bg='black', fg='white')
-        im = Image.open(r'KEYB.jpg')
+        im = Image.open('./KEYB.jpg')
         im = im.resize((200, 100), Image.ANTIALIAS)
         im2 = ImageTk.PhotoImage(im)
         self.label_cue.configure(image=im2, bg='black', fg='white')
@@ -279,7 +279,7 @@ class DMGUI_Test:
         self.outlet.push_sample(['End Cross'])
         self.label.pack(expand=1)
         self.outlet.push_sample(['start Fb'])
-        self.lblVar.set(self.letter)
+        self.lblVar.set('')
         self.label.configure(bg=self.color, fg='black', command=self.play_sound(self.sound))
         self.root.configure(bg=self.color)
         self.root.update_idletasks()
@@ -333,5 +333,5 @@ class DMGUI_Test:
 
 #Call the GUI
 root = tk.Tk()
-train_gui = DMGUI_Test(root, 1)
+train_gui = DMGUI_Test(root, 0)
 root.mainloop()
