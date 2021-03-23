@@ -20,11 +20,11 @@ def create_runs(set_n):
     one_long_run = []
 
     def chunks(set_n):
-        for i in range(0, len(set_n), 5):
-            yield set_n[i:i + 5]
+        for i in range(0, len(set_n), 3):
+            yield set_n[i:i + 3]
 
     for run in list(chunks(set_n)):
-        run = (run * 4)
+        run = (run * 3)
         random.shuffle(run)
         runs.append(run)
 
