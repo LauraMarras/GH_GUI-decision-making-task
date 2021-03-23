@@ -27,7 +27,7 @@ class DMGUI_Test:
 
     def __init__(self, root, pp_n):
         pygame.mixer.init()
-        self.numTrials = 120
+        self.numTrials = 90
         self.trialn = 0
 
         #Retrieve sets for pp
@@ -90,8 +90,6 @@ class DMGUI_Test:
             self.instructions = self.dutch_instructions
             self.lblVar.set(self.instructions)
             self.lang_button['text'] = "ENGLISH"
-
-
 
     #Signals start of session
     def run(self, event):

@@ -27,7 +27,7 @@ class DMGUI_Test:
 
     def __init__(self, root, pp_n):
         pygame.mixer.init()
-        self.numTrials = 120
+        self.numTrials = 90
         self.trialn = 0
         self.n_run = 0
 

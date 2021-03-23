@@ -7,7 +7,7 @@ import Set_creation as sc
 
 ###GUI
 class DMGUI_Training:
-    
+
     #Set number of trials and windows durations
     durationStimuli = 2
     durationCross = 0.5
@@ -29,7 +29,8 @@ class DMGUI_Training:
         pygame.mixer.init()
         self.numTrials = 45
         self.trialn = 0
-        
+        self.n_run = 0
+
         #Retrieve sets for pp
         try:
             self.all_sets = sc.read_set(pp_n)
@@ -38,7 +39,7 @@ class DMGUI_Training:
             self.all_sets = sc.read_set(pp_n)
 
         self.root = root
-        self.initial_set = self.all_sets['train']
+        self.initial_set = self.all_sets['test']
         self.set = sc.create_runs(self.initial_set)
         self.categories = sc.assign_categories(self.initial_set)
         self.fb_color = sc.fb_color_association()
@@ -55,7 +56,7 @@ class DMGUI_Training:
         self.width = self.root.winfo_screenwidth() * 3 / 3
         self.height = self.root.winfo_screenheight() * 3 / 3
         self.root.geometry('%dx%d+0+0' % (self.width, self.height))
-        self.root.title("Decision Making Task Training")
+        self.root.title("Decision Making Task Test")
         self.root.configure(bg='black')
 
         #Initialize LSL
@@ -64,7 +65,7 @@ class DMGUI_Training:
         self.outlet = StreamOutlet(info)
 
         #Configuration language button
-        self.lang_button = tk.Button(text='DUTCH', fg='red', command=self.change_lang)
+        self.lang_button = tk.Button(text='ENG', fg='red', command=self.change_lang)
 
         #Configuration Label
         self.label = tk.Label(anchor='w', justify='left', font=('Helvetica bold', 15), bg='black', fg='white')
@@ -91,6 +92,8 @@ class DMGUI_Training:
             self.lblVar.set(self.instructions)
             self.lang_button['text'] = "ENGLISH"
 
+
+
     #Signals start of session
     def run(self, event):
         self.root.unbind('<space>')
@@ -110,13 +113,30 @@ class DMGUI_Training:
         else:
             self.numTrials = self.numTrials - 1
             self.trialn = 120 - self.numTrials
-            self.outlet.push_sample([f'Start Trial n.{self.trialn}'])
-            self.lblVar.set('+')
-            self.label.configure(font=('Helvetica bold', 30), bg='black', fg='white')
-            self.root.configure(bg='black')
 
-            self.root.after(int(self.durationCross * 3000), self.stim)
-            self.root.update_idletasks()
+            if (self.trialn - 1) % 9 == 0:
+                self.outlet.push_sample([f'Start Trial n.{self.trialn}'])
+                self.n_run += 1
+                self.root.after(0, self.run_break)
+            else:
+                self.outlet.push_sample([f'Start Trial n.{self.trialn}'])
+                self.lblVar.set('+')
+                self.label.configure(font=('Helvetica bold', 30), bg='black', fg='white')
+                self.root.configure(bg='black')
+
+                self.root.after(int(self.durationCross * 1000), self.stim)
+                self.root.update_idletasks()
+
+    #Breaks
+    def run_break(self):
+        self.outlet.push_sample(['Start Break'])
+        break_string = 'Group N. {}'.format(self.n_run)
+        self.lblVar.set(break_string)
+        self.label.configure(font=('Helvetica bold', 30), bg='black', fg='white')
+        self.root.configure(bg='black')
+
+        self.root.after(10000, self.stim)
+        self.root.update_idletasks()
 
     #Stimulus presentation
     def stim(self):
@@ -326,6 +346,7 @@ class DMGUI_Training:
 
         self.results[trial] = [stimulus, repetition, choice, accuracy]
         self.outlet.push_sample(['Sum Trail: ' + str(trial) + ', ' + str(stimulus) + ', ' + str(repetition) + ', ' + choice + ', ' + accuracy])
+
 
 
 #Call the GUI
