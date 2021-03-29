@@ -7,7 +7,7 @@ import Set_creation as sc
 
 ###GUI
 class DMGUI_Training:
-    
+
     #Set number of trials and windows durations
     durationStimuli = 2
     durationCross = 0.5
@@ -20,16 +20,21 @@ class DMGUI_Training:
     coin_sound = ('./Sound Stimuli/coins.mp3')
     buzz_sound = ('./Sound Stimuli/buzz.mp3')
     
-    #save instructions text
+    #save instructions texts
     dutch_instructions = 'Als u klaar bent, drukt u op <spatiebalk> om te beginnen'
     eng_instructions = 'When you are ready, press <spacebar> to start'
+    dutch_break = 'Wees voorzichtig, alles zal nu sneller gaan!'
+    eng_break = 'Be careful, everything will be faster now!'
     instructions = eng_instructions
+    break_text = eng_break
 
     def __init__(self, root, pp_n):
         pygame.mixer.init()
-        self.numTrials = 45
+        self.numTrials = 75
         self.trialn = 0
-        
+        self.runn = 0
+        self.fast = False
+
         #Retrieve sets for pp
         try:
             self.all_sets = sc.read_set(pp_n)
@@ -43,7 +48,6 @@ class DMGUI_Training:
         self.categories = sc.assign_categories(self.initial_set)
         self.fb_color = sc.fb_color_association()
         self.accuracy = {}
-        self.count = 0
         self.results = {}
         self.presented_stim = {}
         self.press = ''
@@ -55,7 +59,7 @@ class DMGUI_Training:
         self.width = self.root.winfo_screenwidth() * 3 / 3
         self.height = self.root.winfo_screenheight() * 3 / 3
         self.root.geometry('%dx%d+0+0' % (self.width, self.height))
-        self.root.title("Decision Making Task Training")
+        self.root.title("Decision Making Task Test")
         self.root.configure(bg='black')
 
         #Initialize LSL
@@ -64,13 +68,13 @@ class DMGUI_Training:
         self.outlet = StreamOutlet(info)
 
         #Configuration language button
-        self.lang_button = tk.Button(text='DUTCH', fg='red', command=self.change_lang)
+        self.lang_button = tk.Button(text='DUTCH', fg='red', font=('Helvetica bold', 12), command=self.change_lang)
 
         #Configuration Label
-        self.label = tk.Label(anchor='w', justify='left', font=('Helvetica bold', 15), bg='black', fg='white')
+        self.label = tk.Label(anchor='w', justify='left', font=('Helvetica bold', 20), bg='black', fg='white')
         self.lblVar = tk.StringVar()
         self.label.configure(textvariable=self.lblVar)
-        self.lang_button.pack(pady=10)
+        self.lang_button.pack(pady=30)
         self.lblVar.set(self.instructions)
         self.label.pack(expand=1)
 
@@ -84,12 +88,15 @@ class DMGUI_Training:
     def change_lang(self):
         if self.instructions == self.dutch_instructions:
             self.instructions = self.eng_instructions
+            self.break_text = self.eng_break
             self.lblVar.set(self.instructions)
             self.lang_button['text'] = "DUTCH"
         elif self.instructions == self.eng_instructions:
             self.instructions = self.dutch_instructions
+            self.break_text = self.dutch_break
             self.lblVar.set(self.instructions)
             self.lang_button['text'] = "ENGLISH"
+
 
     #Signals start of session
     def run(self, event):
@@ -100,30 +107,84 @@ class DMGUI_Training:
 
     #Start of new trial
     def trial(self):
-        self.label.pack(expand=1)
         self.root.update_idletasks()
         self.root.bind('<Left>', self.wpress2)
         self.root.bind('<Right>', self.lpress2)
-
+    
         if self.numTrials == 0 or len(self.set) == 0:
             self.root.after(0, self.end)
         else:
-            self.numTrials = self.numTrials - 1
-            self.trialn = 120 - self.numTrials
-            self.outlet.push_sample([f'Start Trial n.{self.trialn}'])
-            self.lblVar.set('+')
-            self.label.configure(font=('Helvetica bold', 30), bg='black', fg='white')
-            self.root.configure(bg='black')
+            self.numTrials -= 1
+            self.trialn += 1
+            if (self.trialn - 1) % 9 == 0:
+                self.outlet.push_sample([f'Start Trial n.{self.trialn}'])
+                self.runn += 1
+                self.root.after(0, self.run_break)
+            else:
+                self.outlet.push_sample([f'Start Trial n.{self.trialn}'])
+                self.lblVar.set('+')
+                self.label.configure(font=('Helvetica bold', 30), bg='black', fg='white')
+                self.root.configure(bg='black')
 
-            self.root.after(int(self.durationCross * 3000), self.stim)
+                self.root.after(int(self.durationCross * 1000), self.stim)
+                self.root.update_idletasks()
+
+    #make a break in between runs
+    def run_break(self):
+        self.outlet.push_sample(['Start Break'])
+        self.label.configure(justify='center', font=('Helvetica bold', 20), bg='black', fg='white')
+        self.root.configure(bg='black')
+
+        #estimates accuracy during previous run (only after 2 runs)
+        if self.runn >= 3:
+            self.repitions={}
+            for trial in self.results.values():
+                if trial[1] in self.repitions:
+                    self.repitions[trial[1]]+=[trial[3]]
+                else:
+                    self.repitions[trial[1]]=[trial[3]]
+            
+            self.run_results = self.repitions[3][(len(self.repitions[3]) - 3):]
+            self.run_accuracy = self.run_results.count('Correct')
+            
+            #if in 3rd repetition correct choices are 3/3 decrease stimuli time (as in test version)
+            if self.run_accuracy == 3:
+                if self.fast == False:
+                    self.root.after(0, self.faster)
+                    self.outlet.push_sample(['Start Message Faster times'])
+                    self.lblVar.set(self.break_text + '\n\nGroup N. {}\n\n'.format(self.runn) + self.instructions)
+                    self.root.bind('<space>', self.call_stim)
+                else:
+                    self.root.after(0, self.end)
+            else:   
+                self.lblVar.set('Group N. {}'.format(self.runn) + '\n\n' + self.instructions)
+                self.root.bind('<space>', self.call_stim)
+                self.root.update_idletasks()
+
+        else:
+            self.lblVar.set('Group N. {}'.format(self.runn) + '\n\n' + self.instructions)
+            self.root.bind('<space>', self.call_stim)
             self.root.update_idletasks()
 
+    #decrease stimuli, cue, FB and cross duration
+    def faster(self):
+        self.fast = True
+        self.durationStimuli = 1
+        self.durationCross = 0.5
+        self.durationCue = 2
+        self.durationFb = 1
+        self.durationMessage = 1
+    
+    def call_stim(self, event):
+        self.root.after(0, self.stim)
+
+    
     #Stimulus presentation
     def stim(self):
         self.outlet.push_sample(['End Cross'])
+        self.root.unbind('<space>')
 
         #set which stimulus to present: each image has one number from 1 to 60, number is taken from randomized set
-        self.count += 1  #to signal trial number for later
         self.stimulus = self.set.pop(0)
         self.presented_stim[self.stimulus] += 1
         self.my_string = './NOUN stimuli/{stim}{ext}'
@@ -132,7 +193,7 @@ class DMGUI_Training:
         image = Image.open(self.stim_path)
         image = image.resize((500, 500), Image.ANTIALIAS)
         test = ImageTk.PhotoImage(image)
-        self.label.configure(image=test, bg='black', fg='white')
+        self.label.configure(image=test, bg='black', fg='white', font=('Helvetica bold', 30))
         self.root.configure(bg='black')
         self.label.image = test
         self.root.update_idletasks()
@@ -188,7 +249,7 @@ class DMGUI_Training:
         if correct == self.press:
             self.letter = 'W'
             self.color = self.fb_color['Correct']
-            self.accuracy[self.count] = 'Correct'
+            self.accuracy[self.trialn] = 'Correct'
             self.sound = self.coin_sound
 
             self.outlet.push_sample(['Correct W'])
@@ -196,7 +257,7 @@ class DMGUI_Training:
         else:
             self.letter = 'L'
             self.color = self.fb_color['Incorrect']
-            self.accuracy[self.count] = 'Incorrect'
+            self.accuracy[self.trialn] = 'Incorrect'
             self.sound = self.buzz_sound
 
             self.outlet.push_sample(['Incorrect W'])
@@ -216,7 +277,7 @@ class DMGUI_Training:
         if correct == self.press:
             self.letter = 'L'
             self.color = self.fb_color['Correct']
-            self.accuracy[self.count] = 'Correct'
+            self.accuracy[self.trialn] = 'Correct'
             self.sound = self.coin_sound
 
             self.outlet.push_sample(['Correct L'])
@@ -224,7 +285,7 @@ class DMGUI_Training:
         else:
             self.letter = 'W'
             self.color = self.fb_color['Incorrect']
-            self.accuracy[self.count] = 'Incorrect'
+            self.accuracy[self.trialn] = 'Incorrect'
             self.sound = self.buzz_sound
 
             self.outlet.push_sample(['Incorrect L'])
@@ -255,7 +316,7 @@ class DMGUI_Training:
         self.label.configure(bg='black', fg='red')
         self.root.configure(bg='black')
         self.root.update_idletasks()
-        self.accuracy[self.count] = 'No answer'
+        self.accuracy[self.trialn] = 'No answer'
         self.root.after(int(self.durationMessage * 1000), self.trial)
         self.root.after(0, self.stream)
 
@@ -263,6 +324,8 @@ class DMGUI_Training:
     def cross(self):
         self.outlet.push_sample(['Start Cross'])
         self.label_cue.destroy()
+        self.root.bind('<Left>', self.wpress2)
+        self.root.bind('<Right>', self.lpress2)
         self.label.pack(expand=1)
         self.lblVar.set('+')
         self.label.configure(bg='black', fg='white')
@@ -272,8 +335,6 @@ class DMGUI_Training:
 
     #Feedback presentation depending on accuracy on trial
     def fb(self):
-        self.root.bind('<Left>', self.wpress2)
-        self.root.bind('<Right>', self.lpress2)
         self.outlet.push_sample(['End Cross'])
         self.label.pack(expand=1)
         self.outlet.push_sample(['start Fb'])
@@ -297,8 +358,8 @@ class DMGUI_Training:
 
     #Ends the experiment
     def end(self):
-        self.outlet.push_sample(['End Experiment'])
-        self.lblVar.set('End of experiment')
+        self.outlet.push_sample(['End Training'])
+        self.lblVar.set('End of training')
         self.label.configure(bg='black', fg='white')
         self.root.configure(bg='black')
         self.root.update_idletasks()
@@ -322,10 +383,11 @@ class DMGUI_Training:
         stimulus = self.stimulus
         repetition = self.presented_stim[self.stimulus]
         choice = self.press
-        accuracy = self.accuracy[self.count]
+        accuracy = self.accuracy[self.trialn]
 
-        self.results[trial] = [stimulus, repetition, choice, accuracy]
+        self.results[trial] = [stimulus, repetition, choice, accuracy]        
         self.outlet.push_sample(['Sum Trail: ' + str(trial) + ', ' + str(stimulus) + ', ' + str(repetition) + ', ' + choice + ', ' + accuracy])
+        
 
 
 #Call the GUI
