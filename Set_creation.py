@@ -6,13 +6,12 @@ def create_set():
     stimuli_set = range(1, 61)
     set1 = random.sample(stimuli_set, 30)
     
-    set_test = [n for n in random.sample(stimuli_set, 60) if n not in set1]
+    set_test = [n for n in random.sample(stimuli_set, 60) if n not in set1] #30 stimuli
     
-    set_ins = set1[0:5] #5 stimuli
-    set_train = set1[5:15] #10 stimuli
-    set_train_fast = set1[15:20] #5 stimuli
+    set_ins = set1[0:3] #3 stimuli
+    set_train = set1[3:30] #27 stimuli
 
-    return set_test, set_ins, set_train, set_train_fast
+    return set_test, set_ins, set_train
 
 # Create runs and randomize stimuli order
 def create_runs(set_n):
@@ -68,11 +67,11 @@ def fb_color_association():
 
 
 def create_pp_sets():
-    set_test, set_ins, set_train, set_train_fast = create_set()
-    all_sets = [set_test, set_ins, set_train, set_train_fast]
-    keys = ['test', 'ins', 'train', 'train_fast']
+    set_test, set_ins, set_train = create_set()
+    all_sets = [set_test, set_ins, set_train]
+    keys = ['test', 'ins', 'train']
     all_data = {}
-    for n in range(0,4):
+    for n in range(0,len(keys)):
         all_data[keys[n]] = all_sets[n]
     return all_data
 

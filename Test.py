@@ -43,7 +43,6 @@ class DMGUI_Test:
         self.categories = sc.assign_categories(self.initial_set)
         self.fb_color = sc.fb_color_association()
         self.accuracy = {}
-        self.count = 0
         self.results = {}
         self.presented_stim = {}
         self.press = ''
@@ -64,13 +63,13 @@ class DMGUI_Test:
         self.outlet = StreamOutlet(info)
 
         #Configuration language button
-        self.lang_button = tk.Button(text='ENG', fg='red', command=self.change_lang)
+        self.lang_button = tk.Button(text='DUTCH', fg='red', font=('Helvetica bold', 12), command=self.change_lang)
 
         #Configuration Label
-        self.label = tk.Label(anchor='w', justify='left', font=('Helvetica bold', 15), bg='black', fg='white')
+        self.label = tk.Label(anchor='w', font=('Helvetica bold', 20), bg='black', fg='white')
         self.lblVar = tk.StringVar()
         self.label.configure(textvariable=self.lblVar)
-        self.lang_button.pack(pady=10)
+        self.lang_button.pack(pady=30)
         self.lblVar.set(self.instructions)
         self.label.pack(expand=1)
 
@@ -108,8 +107,8 @@ class DMGUI_Test:
         if self.numTrials == 0 or len(self.set) == 0:
             self.root.after(0, self.end)
         else:
-            self.numTrials = self.numTrials - 1
-            self.trialn = 120 - self.numTrials
+            self.numTrials -= 1
+            self.trialn += 1
             self.outlet.push_sample([f'Start Trial n.{self.trialn}'])
             self.lblVar.set('+')
             self.label.configure(font=('Helvetica bold', 30), bg='black', fg='white')
@@ -123,7 +122,6 @@ class DMGUI_Test:
         self.outlet.push_sample(['End Cross'])
 
         #set which stimulus to present: each image has one number from 1 to 60, number is taken from randomized set
-        self.count += 1  #to signal trial number for later
         self.stimulus = self.set.pop(0)
         self.presented_stim[self.stimulus] += 1
         self.my_string = './NOUN stimuli/{stim}{ext}'
@@ -188,7 +186,7 @@ class DMGUI_Test:
         if correct == self.press:
             self.letter = 'W'
             self.color = self.fb_color['Correct']
-            self.accuracy[self.count] = 'Correct'
+            self.accuracy[self.trialn] = 'Correct'
             self.sound = self.coin_sound
 
             self.outlet.push_sample(['Correct W'])
@@ -196,7 +194,7 @@ class DMGUI_Test:
         else:
             self.letter = 'L'
             self.color = self.fb_color['Incorrect']
-            self.accuracy[self.count] = 'Incorrect'
+            self.accuracy[self.trialn] = 'Incorrect'
             self.sound = self.buzz_sound
 
             self.outlet.push_sample(['Incorrect W'])
@@ -216,7 +214,7 @@ class DMGUI_Test:
         if correct == self.press:
             self.letter = 'L'
             self.color = self.fb_color['Correct']
-            self.accuracy[self.count] = 'Correct'
+            self.accuracy[self.trialn] = 'Correct'
             self.sound = self.coin_sound
 
             self.outlet.push_sample(['Correct L'])
@@ -224,7 +222,7 @@ class DMGUI_Test:
         else:
             self.letter = 'W'
             self.color = self.fb_color['Incorrect']
-            self.accuracy[self.count] = 'Incorrect'
+            self.accuracy[self.trialn] = 'Incorrect'
             self.sound = self.buzz_sound
 
             self.outlet.push_sample(['Incorrect L'])
@@ -255,7 +253,7 @@ class DMGUI_Test:
         self.label.configure(bg='black', fg='red')
         self.root.configure(bg='black')
         self.root.update_idletasks()
-        self.accuracy[self.count] = 'No answer'
+        self.accuracy[self.trialn] = 'No answer'
         self.root.after(int(self.durationMessage * 1000), self.trial)
         self.root.after(0, self.stream)
 
@@ -322,7 +320,7 @@ class DMGUI_Test:
         stimulus = self.stimulus
         repetition = self.presented_stim[self.stimulus]
         choice = self.press
-        accuracy = self.accuracy[self.count]
+        accuracy = self.accuracy[self.trialn]
 
         self.results[trial] = [stimulus, repetition, choice, accuracy]
         self.outlet.push_sample(['Sum Trail: ' + str(trial) + ', ' + str(stimulus) + ', ' + str(repetition) + ', ' + choice + ', ' + accuracy])

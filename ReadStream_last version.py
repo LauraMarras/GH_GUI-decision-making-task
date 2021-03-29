@@ -43,6 +43,8 @@ for trial in allTrials.values():
     else:
         repitions[trial[1]]=[trial[3]]
 
+#print(repitions)
+
 results={}
 total_c=0
 total_i=0
