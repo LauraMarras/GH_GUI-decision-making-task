@@ -79,7 +79,7 @@ class DMGUI_Istructions:
     #start example trial --> manually timed
     def example(self, event):
         self.lang_button.destroy()
-        self.root.unbind('<Return>')
+        self.root.unbind('<space>')
         self.my_string = r'NOUN stimuli/{stim}{ext}'            
         self.stimulus = self.set.pop(0)
         self.stim_path = self.my_string.format(stim=str(self.stimulus), ext='.jpg')  #files are stored in folder with names from 1 to 60
@@ -91,11 +91,11 @@ class DMGUI_Istructions:
         self.label.image = test
         self.label.pack(expand=1)
         self.correct = self.categories[self.stimulus]
-        self.root.bind('<Return>', self.cue)
+        self.root.bind('<space>', self.cue)
 
     #show cue to make choice    
     def cue(self, event):
-        self.root.unbind('<Return>')
+        self.root.unbind('<space>')
         if self.language == 'ENG':
             cue = 'PRESS W or L'
         elif self.language == 'DUTCH':
@@ -172,11 +172,11 @@ class DMGUI_Istructions:
         self.root.configure(bg=self.color)
         self.root.after(5000, self.stop_sound)
 
-        if len(self.set) >= 0:
-            self.root.bind('<Return>', self.example)
+        if len(self.set) > 0:
+            self.root.bind('<space>', self.example)
         
         else:
-            self.root.bind('<Return>', self.close)
+            self.root.bind('<space>', self.close)
 
 
     #play sound during FB
