@@ -1,0 +1,27 @@
+1 Game Instructions:
+1
+1During this game, you will be shown a series of images. The images are 30 in total, and each one will be presented 
+14 times, so there will be 120 presentations in total, in random order.
+1
+1We assigned half of the images to be “winning” and the other half to be “losing”. Every time one image is presented, 
+1your goal is to guess and indicate whether it is of the "winning" or "losing" category. 
+1
+1As soon as the image disappears, you will have up to 2 seconds to make your choice:
+1    - Press the left arrow to choose Winning
+1    - Press the right arrow to choose Losing
+2If you respond before the image disappears, the answer will not be valid, so make sure to wait until the image 
+2disappears to give your response.
+2
+2If you take longer than 2 secs to respond, the answer will not be valid and you will se a warning asking you to 
+2speed up, so try to answer as fast as possible.
+3Of course, when an image is presented for the first time, you won't know the correct answer, so you will have to guess. 
+3But, after your choice, you will receive feedback consisting of:
+3    - A letter, indicating what was the correct category: W (winning) or L (losing)
+3    - A colour and a sound, which indicate whether your choice was accurate or not (coins or buzz sound, yellow or blue)
+3So, by paying attention to the feedback, you can learn which is the right category for each image and when the image is 
+3presented again, you can try to answer correctly. 
+3
+3The goal is to learn the correct categories and make less errors as possible.
+3Be ready, right after the feedback a new image will be presented.
+3
+3   When you are ready, press 'L' to start
