@@ -1,6 +1,6 @@
 import pyxdf
 
-data, header = pyxdf.load_xdf(r'block_trial_laura_final2.xdf')
+data, header = pyxdf.load_xdf(r'block_Maxime.xdf')
 streams = {}
 initial_time = None
 trial_n = 0
@@ -31,8 +31,8 @@ for stream in data:
     else:
         raise RuntimeError('Unknown stream format')
     
-print(streams)
-print(allTrials)
+#print(streams)
+#print(allTrials)
 
 # Analyze data per stimulus repetition
 repitions={}
